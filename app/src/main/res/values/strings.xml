@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">vkontaktikum</string>
+
+    <string name="phone_login_activity">Phone</string>
+    <string name="password_login_activity">Password</string>
+    <string name="sign_in_button">Sign in</string>
+</resources>
