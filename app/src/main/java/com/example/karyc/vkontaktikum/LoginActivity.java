@@ -13,17 +13,28 @@ import android.webkit.WebViewClient;
 public class LoginActivity extends AppCompatActivity {
 
     private static final String redirectUri = "https://yandex.ru/maps";
-    private static final String SAVED_ACCESS_TOKEN = "SAVED_ACCESS_TOKEN";
+    public static final String SAVED_ACCESS_TOKEN = "SAVED_ACCESS_TOKEN";
+    private static final String scope = "friends,wall,photos,audio,video,stories,pages,status,groups,notifications,offline";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_weblogin);
-        WebView webView = findViewById(R.id.webviewLogin);
-        webView.loadUrl("https://oauth.vk.com/authorize?client_id=6638621&display=mobile&redirect_uri=" + redirectUri + "&scope=friends,offline&response_type=token&v=5.80");
-        webView.setWebViewClient(new MyWebViewClient());
+        SharedPreferences sharedPreferences = getSharedPreferences("ACCESS_TOKEN_STORAGE", MODE_PRIVATE);
+        String accessToken = sharedPreferences.getString(SAVED_ACCESS_TOKEN, null);
 
+        if (accessToken == null) {
+
+            setContentView(R.layout.activity_weblogin);
+            WebView webView = findViewById(R.id.webviewLogin);
+            webView.loadUrl("https://oauth.vk.com/authorize?client_id=6638621&display=mobile&redirect_uri="
+                    + redirectUri + "&scope=" + scope + "&response_type=token&v=5.80");
+            webView.setWebViewClient(new MyWebViewClient());
+        } else {
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+
+        }
     }
 
     class MyWebViewClient extends WebViewClient {
@@ -43,13 +54,13 @@ public class LoginActivity extends AppCompatActivity {
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
 
+
             }
 
             return super.shouldOverrideUrlLoading(view, request);
         }
 
     }
-
 
 
 }
