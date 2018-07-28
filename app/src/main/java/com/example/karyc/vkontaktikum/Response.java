@@ -5,5 +5,5 @@ import java.util.ArrayList;
 public class Response {
 
     public int count;
-    public ArrayList<Long> items;
+    public ArrayList<Friend> items;
 }

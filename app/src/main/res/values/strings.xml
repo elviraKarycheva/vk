@@ -4,4 +4,11 @@
     <string name="phone_login_activity">Phone</string>
     <string name="password_login_activity">Password</string>
     <string name="sign_in_button">Sign in</string>
+
+    <string name="newsfeed_btn">Newsfeed</string>
+    <string name="friends_btn">Friends</string>
+    <string name="groups_btn">Groups</string>
+    <string name="photos_btn">Photos</string>
+    <string name="videos_btn">Videos</string>
+    <string name="bookmarks_btn">Bookmarks</string>
 </resources>

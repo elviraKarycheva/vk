@@ -31,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
                     + redirectUri + "&scope=" + scope + "&response_type=token&v=5.80");
             webView.setWebViewClient(new MyWebViewClient());
         } else {
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            Intent intent = new Intent(LoginActivity.this, FriendsActivity.class);
             startActivity(intent);
 
         }
@@ -51,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString(SAVED_ACCESS_TOKEN, accessToken);
                 editor.commit();
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                Intent intent = new Intent(LoginActivity.this, FriendsActivity.class);
                 startActivity(intent);
 
 
