@@ -10,6 +10,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,13 +30,28 @@
                 tools:layout_editor_absoluteY="219dp" />
 
 
+            <View
+                android:id="@+id/view"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorDivider"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"/>
+
             <Button
                 android:id="@+id/buttonFriends"
                 style="@style/style_btn_main"
-                android:text="@string/friends_btn"
                 android:background="@color/colorWhite"
+                android:text="@string/friends_btn"
                 tools:layout_editor_absoluteX="121dp"
                 tools:layout_editor_absoluteY="158dp" />
+            <View
+                android:id="@+id/view1"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorDivider"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"/>
 
             <Button
                 android:id="@+id/buttonGroups"
@@ -55,6 +71,13 @@
                 style="@style/style_btn_main"
                 android:layout_marginTop="16dp"
                 android:text="@string/videos_btn" />
+            <View
+                android:id="@+id/view2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorDivider"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"/>
 
             <Button
                 android:id="@+id/buttonBookmarks"

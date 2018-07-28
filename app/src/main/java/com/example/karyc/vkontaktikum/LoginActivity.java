@@ -31,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
                     + redirectUri + "&scope=" + scope + "&response_type=token&v=5.80");
             webView.setWebViewClient(new MyWebViewClient());
         } else {
-            Intent intent = new Intent(LoginActivity.this, FriendsActivity.class);
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
 
         }
