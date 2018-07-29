@@ -17,14 +17,4 @@ public class RetrofitProvider {
         FriendsApi friendsApi = retrofit.create(FriendsApi.class);
         return friendsApi;
     }
-
-    public FriendsApi getOnlineFriends() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl(BASE_URL)
-                .build();
-
-        FriendsApi friendsApi = retrofit.create(FriendsApi.class);
-        return friendsApi;
-    }
 }

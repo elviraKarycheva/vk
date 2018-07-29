@@ -3,15 +3,32 @@ package com.example.karyc.vkontaktikum;
 import com.google.gson.annotations.SerializedName;
 
 public class Friend {
-
-    public long id;
+    private long id;
     @SerializedName("first_name")
-    public String firstName;
+    private String firstName;
     @SerializedName("last_name")
-    public String lastName;
+    private String lastName;
     @SerializedName("photo_200_orig")
-    public String photoProfile;
-    public int online;
+    private String photoProfile;
+    private int online;
 
+    public long getId() {
+        return id;
+    }
 
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getPhotoProfile() {
+        return photoProfile;
+    }
+
+    public int getOnline() {
+        return online;
+    }
 }

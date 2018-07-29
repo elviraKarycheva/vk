@@ -60,10 +60,10 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
 
         void bind(final Friend friend) {
-            nameView.setText(friend.firstName);
-            statusView.setText(String.valueOf(friend.online));
+            nameView.setText(friend.getFirstName());
+            statusView.setText(String.valueOf(friend.getOnline()));
             Picasso.get()
-                    .load(friend.photoProfile)
+                    .load(friend.getPhotoProfile())
                     .into(imageProfileView);
 
         }
