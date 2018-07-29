@@ -11,4 +11,7 @@
     <string name="photos_btn">Photos</string>
     <string name="videos_btn">Videos</string>
     <string name="bookmarks_btn">Bookmarks</string>
+
+    <string name="start_messaging_btn">Message</string>
+    <string name="delete_friend_btn">Delete</string>
 </resources>

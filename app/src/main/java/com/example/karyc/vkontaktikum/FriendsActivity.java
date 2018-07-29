@@ -46,6 +46,10 @@ public class FriendsActivity extends AppCompatActivity {
         RecyclerView mRecyclerView = findViewById(R.id.recyclerview_friends);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(mAdapter);
+        int dimenSide = (int) getResources().getDimension(R.dimen.margin_side);
+        int dimenTop = (int) getResources().getDimension(R.dimen.margin_top);
+        mRecyclerView.addItemDecoration(new MarginItemDecoration(dimenSide, dimenTop));
+
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
     }

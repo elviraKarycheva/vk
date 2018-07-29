@@ -24,6 +24,10 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         inflater = LayoutInflater.from(parent.getContext());
 
         View itemView = inflater.inflate(R.layout.friend_item, parent, false);
+
+        itemView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
+
         return new FriendsHolder(itemView);
     }
 
@@ -60,8 +64,10 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
 
         void bind(final Friend friend) {
-            nameView.setText(friend.getFirstName());
-            statusView.setText(String.valueOf(friend.getOnline()));
+            nameView.setText(friend.getFirstName() + " " + friend.getLastName());
+            if(friend.getOnline() == 1){
+                statusView.setBackgroundResource(R.drawable.status_background_online);
+            } else statusView.setBackgroundResource(R.drawable.status_background_offline);
             Picasso.get()
                     .load(friend.getPhotoProfile())
                     .into(imageProfileView);
