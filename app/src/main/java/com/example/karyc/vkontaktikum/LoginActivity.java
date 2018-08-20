@@ -12,7 +12,7 @@ import android.webkit.WebViewClient;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private static final String redirectUri = "https://yandex.ru/maps";
+    private static final String redirectUri = "https://oauth.vk.com/blank.html";
     public static final String SAVED_ACCESS_TOKEN = "SAVED_ACCESS_TOKEN";
     private static final String scope = "friends,wall,photos,audio,video,stories,pages,status,groups,notifications,offline";
 
@@ -53,8 +53,6 @@ public class LoginActivity extends AppCompatActivity {
                 editor.commit();
                 Intent intent = new Intent(LoginActivity.this, FriendsActivity.class);
                 startActivity(intent);
-
-
             }
 
             return super.shouldOverrideUrlLoading(view, request);

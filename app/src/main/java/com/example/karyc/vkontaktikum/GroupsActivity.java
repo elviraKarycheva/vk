@@ -11,6 +11,7 @@ import android.util.Log;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 import static com.example.karyc.vkontaktikum.LoginActivity.SAVED_ACCESS_TOKEN;
 
@@ -53,5 +54,24 @@ public class GroupsActivity extends AppCompatActivity{
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
+    }
+
+    public void onDeleteGroup (long id){
+        RetrofitProvider retrofitProvider = new RetrofitProvider();
+        GroupsApi groupsApi = retrofitProvider.getGroupsApi();
+        groupsApi.getLeaveGroup(accessToken, "5.80", id).enqueue(new Callback<GroupLeaveResponse>() {
+            @Override
+            public void onResponse(Call<GroupLeaveResponse> call, Response<GroupLeaveResponse> response) {
+                if (response.isSuccessful()) {
+                    GroupLeaveResponse body = response.body();
+                    Log.d("successful", body.toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GroupLeaveResponse> call, Throwable t) {
+
+            }
+        });
     }
 }

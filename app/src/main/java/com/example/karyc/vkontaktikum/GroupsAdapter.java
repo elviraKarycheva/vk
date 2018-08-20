@@ -68,6 +68,15 @@ public class GroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             Picasso.get()
                     .load(groups.getPhoto200())
                     .into(imageGroupView);
+
+            buttonDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (groupsActivity != null){
+                        groupsActivity.onDeleteGroup(groups.getId());
+                    }
+                }
+            });
         }
     }
 }

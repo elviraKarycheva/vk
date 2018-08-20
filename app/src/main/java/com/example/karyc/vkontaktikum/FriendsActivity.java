@@ -67,8 +67,6 @@ public class FriendsActivity extends AppCompatActivity {
                     FriendsGetDeleteResponse body = response.body();
                     Log.d("successful", body.toString());
                 }
-
-
             }
 
             @Override

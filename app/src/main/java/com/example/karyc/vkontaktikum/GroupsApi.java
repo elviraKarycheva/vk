@@ -10,4 +10,9 @@ public interface GroupsApi {
                                          @Query("v") String v,
                                          @Query("filter") String filter,
                                          @Query("extended") int extended);
+
+    @GET("groups.leave")
+    Call<GroupLeaveResponse> getLeaveGroup (@Query("access_token") String accessToken,
+                                            @Query("v") String v,
+                                            @Query("group_id") long id);
 }
