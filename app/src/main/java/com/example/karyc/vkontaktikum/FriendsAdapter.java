@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final ArrayList<Friend> friends = new ArrayList<>();
-
+    public FriendsActivity friendActivity;
 
     @NonNull
     @Override
@@ -25,9 +26,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         View itemView = inflater.inflate(R.layout.friend_item, parent, false);
 
-        itemView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT));
-
         return new FriendsHolder(itemView);
     }
 
@@ -35,6 +33,8 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         FriendsHolder friendsHolder = (FriendsHolder) holder;
         friendsHolder.bind(friends.get(position));
+
+
     }
 
 
@@ -54,6 +54,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         private final TextView nameView;
         private final TextView statusView;
         private final ImageView imageProfileView;
+        Button buttonDelete;
 
         FriendsHolder(View view) {
             super(view);
@@ -61,6 +62,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             nameView = view.findViewById(R.id.nameView);
             statusView = view.findViewById(R.id.statusView);
             imageProfileView = view.findViewById(R.id.imageProfileView);
+            buttonDelete = view.findViewById(R.id.buttonDelete);
         }
 
         void bind(final Friend friend) {
@@ -71,6 +73,15 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             Picasso.get()
                     .load(friend.getPhotoProfile())
                     .into(imageProfileView);
+
+            buttonDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (friendActivity != null){
+                        friendActivity.onDeleteFriend(friend.getId());
+                    }
+                }
+            });
 
         }
 

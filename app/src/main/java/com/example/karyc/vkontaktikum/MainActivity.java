@@ -8,6 +8,7 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
     private Button friendsButton;
+    private Button groupsButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,6 +19,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, FriendsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        groupsButton = findViewById(R.id.buttonGroups);
+        groupsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, GroupsActivity.class);
                 startActivity(intent);
             }
         });

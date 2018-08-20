@@ -16,14 +16,17 @@ import static com.example.karyc.vkontaktikum.LoginActivity.SAVED_ACCESS_TOKEN;
 
 public class FriendsActivity extends AppCompatActivity {
     private FriendsAdapter mAdapter = new FriendsAdapter();
+    private String accessToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends);
 
+        mAdapter.friendActivity = this;
+
         SharedPreferences sharedPreferences = getSharedPreferences("ACCESS_TOKEN_STORAGE", MODE_PRIVATE);
-        String accessToken = sharedPreferences.getString(SAVED_ACCESS_TOKEN, null);
+        accessToken = sharedPreferences.getString(SAVED_ACCESS_TOKEN, null);
         RetrofitProvider retrofitProvider = new RetrofitProvider();
 
         FriendsApi friendsApi = retrofitProvider.getFriendsApi();
@@ -52,5 +55,27 @@ public class FriendsActivity extends AppCompatActivity {
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
+    }
+
+    public void onDeleteFriend(long id) {
+        RetrofitProvider retrofitProvider = new RetrofitProvider();
+        FriendsApi friendsApi = retrofitProvider.getFriendsApi();
+        friendsApi.getDeleteFriend(accessToken, "5.80", id).enqueue(new Callback<FriendsGetDeleteResponse>() {
+            @Override
+            public void onResponse(Call<FriendsGetDeleteResponse> call, Response<FriendsGetDeleteResponse> response) {
+                if (response.isSuccessful()) {
+                    FriendsGetDeleteResponse body = response.body();
+                    Log.d("successful", body.toString());
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(Call<FriendsGetDeleteResponse> call, Throwable t) {
+                Log.d("lolkek", "lolec");
+            }
+
+        });
     }
 }

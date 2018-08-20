@@ -14,4 +14,9 @@ public interface FriendsApi {
     Call<FriendsOnlineGetResponse> getOnlineFriends(@Query("online_mobile") int onlineMobile,
                                                     @Query("access_token") String accessToken,
                                                     @Query("v") String v);
+
+    @GET("friends.delete")
+    Call<FriendsGetDeleteResponse> getDeleteFriend(@Query("access_token") String accessToken,
+                                                   @Query("v") String v,
+                                                   @Query("user_id") long userId);
 }

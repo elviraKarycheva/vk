@@ -22,6 +22,7 @@
         </activity>
         <activity android:name=".FriendsActivity" />
         <activity android:name=".MainActivity" />
+        <activity android:name=".GroupsActivity"/>
     </application>
 
 </manifest>
