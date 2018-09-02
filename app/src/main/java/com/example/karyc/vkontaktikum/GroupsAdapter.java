@@ -73,7 +73,7 @@ public class GroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 @Override
                 public void onClick(View v) {
                     if (groupsActivity != null){
-                        groupsActivity.onDeleteGroup(groups.getId());
+                        groupsActivity.onButtonDeleteGroup(groups.getId());
                     }
                 }
             });

@@ -19,4 +19,10 @@ public interface FriendsApi {
     Call<FriendsGetDeleteResponse> getDeleteFriend(@Query("access_token") String accessToken,
                                                    @Query("v") String v,
                                                    @Query("user_id") long userId);
+
+    @GET("users.get")
+    Call<UsersGetResponse> getUserResponse (@Query("access_token") String accessToken,
+                                            @Query("v") String v,
+                                            @Query("fields") String fields,
+                                            @Query("user_ids") long id);
 }

@@ -1,5 +1,6 @@
 package com.example.karyc.vkontaktikum;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -43,7 +44,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return friends.size();
     }
 
-    public void setFriends(ArrayList<Friend> friendArrayList){
+    public void setFriends(ArrayList<Friend> friendArrayList) {
         friends.clear();
         friends.addAll(friendArrayList);
         notifyDataSetChanged();
@@ -67,18 +68,27 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         void bind(final Friend friend) {
             nameView.setText(friend.getFirstName() + " " + friend.getLastName());
-            if(friend.getOnline() == 1){
+            if (friend.getOnline() == 1) {
                 statusView.setBackgroundResource(R.drawable.status_background_online);
             } else statusView.setBackgroundResource(R.drawable.status_background_offline);
             Picasso.get()
                     .load(friend.getPhotoProfile())
                     .into(imageProfileView);
 
+            imageProfileView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (friendActivity != null) {
+                        friendActivity.onUserGetInfo(friend.getId());
+                    }
+                }
+            });
+
             buttonDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (friendActivity != null){
-                        friendActivity.onDeleteFriend(friend.getId());
+                    if (friendActivity != null) {
+                      friendActivity.onButtonDeleteFriend(friend.getId());
                     }
                 }
             });
