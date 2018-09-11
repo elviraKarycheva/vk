@@ -1,4 +1,4 @@
-package com.example.karyc.vkontaktikum;
+package com.example.karyc.vkontaktikum.core;
 
 import com.google.gson.annotations.SerializedName;
 

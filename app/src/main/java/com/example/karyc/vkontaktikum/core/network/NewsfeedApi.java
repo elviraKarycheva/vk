@@ -1,6 +1,4 @@
-package com.example.karyc.vkontaktikum;
-
-import retrofit2.http.GET;
+package com.example.karyc.vkontaktikum.core.network;
 
 public interface NewsfeedApi {
 //    @GET("newsfeed.get")

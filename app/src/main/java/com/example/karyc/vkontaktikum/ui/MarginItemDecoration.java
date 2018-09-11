@@ -1,4 +1,4 @@
-package com.example.karyc.vkontaktikum;
+package com.example.karyc.vkontaktikum.ui;
 
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;

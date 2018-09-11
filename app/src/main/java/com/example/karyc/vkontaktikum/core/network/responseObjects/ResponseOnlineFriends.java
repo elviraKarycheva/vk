@@ -1,10 +1,12 @@
-package com.example.karyc.vkontaktikum;
+package com.example.karyc.vkontaktikum.core.network.responseObjects;
+
+import com.example.karyc.vkontaktikum.core.Friend;
 
 import java.util.ArrayList;
 
 public class ResponseOnlineFriends {
 
-    public ArrayList<Long> online;
+    public ArrayList<Friend> online;
     public ArrayList<Long> online_mobile;
 
     @Override

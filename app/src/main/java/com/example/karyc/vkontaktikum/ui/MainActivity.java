@@ -1,21 +1,24 @@
-package com.example.karyc.vkontaktikum;
+package com.example.karyc.vkontaktikum.ui;
 
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
+
+import com.example.karyc.vkontaktikum.R;
+import com.example.karyc.vkontaktikum.databinding.ActivityMainBinding;
+import com.example.karyc.vkontaktikum.ui.friends.FriendsActivity;
+import com.example.karyc.vkontaktikum.ui.groups.GroupsActivity;
 
 public class MainActivity extends AppCompatActivity {
-    private Button friendsButton;
-    private Button groupsButton;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        friendsButton = findViewById(R.id.buttonFriends);
-        friendsButton.setOnClickListener(new View.OnClickListener() {
+
+        ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+
+        binding.buttonFriends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, FriendsActivity.class);
@@ -23,16 +26,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        groupsButton = findViewById(R.id.buttonGroups);
-        groupsButton.setOnClickListener(new View.OnClickListener() {
+        binding.buttonGroups.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, GroupsActivity.class);
                 startActivity(intent);
             }
         });
-
     }
-
-
 }

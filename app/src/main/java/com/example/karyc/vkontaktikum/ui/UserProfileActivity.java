@@ -1,4 +1,4 @@
-package com.example.karyc.vkontaktikum;
+package com.example.karyc.vkontaktikum.ui;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,13 +8,21 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.karyc.vkontaktikum.R;
+import com.example.karyc.vkontaktikum.core.RetrofitProvider;
+import com.example.karyc.vkontaktikum.core.network.FriendsApi;
+import com.example.karyc.vkontaktikum.core.network.responseObjects.CommonResponse;
+import com.example.karyc.vkontaktikum.core.network.responseObjects.ResponseUsersGet;
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.example.karyc.vkontaktikum.LoginActivity.SAVED_ACCESS_TOKEN;
+import static com.example.karyc.vkontaktikum.ui.LoginActivity.SAVED_ACCESS_TOKEN;
+import static com.example.karyc.vkontaktikum.ui.friends.AllFriendsFragment.ID_USER;
 
 public class UserProfileActivity extends AppCompatActivity {
     TextView userNameView;
@@ -30,7 +38,7 @@ public class UserProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_profile);
 
         Intent intent = getIntent();
-        long id = intent.getLongExtra("idUser", 0);
+        long id = intent.getLongExtra(ID_USER, 0);
 
         userNameView = findViewById(R.id.userNameView);
         statusUserView = findViewById(R.id.userStatusView);
@@ -40,14 +48,18 @@ public class UserProfileActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("ACCESS_TOKEN_STORAGE", MODE_PRIVATE);
         accessToken = sharedPreferences.getString(SAVED_ACCESS_TOKEN, null);
 
-        RetrofitProvider retrofitProvider = new RetrofitProvider();
-        FriendsApi friendsApi = retrofitProvider.getFriendsApi();
+        FriendsApi friendsApi = RetrofitProvider.getFriendsApi();
         friendsApi.getUserResponse(accessToken, "5.80", "photo_200_orig,status,site,online", id)
-                .enqueue(new Callback<UsersGetResponse>() {
+                .enqueue(new Callback<CommonResponse<List<ResponseUsersGet>>>() {
                     @Override
-                    public void onResponse(Call<UsersGetResponse> call, Response<UsersGetResponse> responseResponse) {
-                        if (responseResponse.isSuccessful()) {
-                            UsersGetResponse body = responseResponse.body();
+                    public void onFailure(Call<CommonResponse<List<ResponseUsersGet>>> call, Throwable t) {
+
+                    }
+
+                    @Override
+                    public void onResponse(Call<CommonResponse<List<ResponseUsersGet>>> call, Response<CommonResponse<List<ResponseUsersGet>>> response) {
+                        if (response.isSuccessful()) {
+                            CommonResponse<List<ResponseUsersGet>> body = response.body();
                             Log.d("successfulinfo", body.toString());
 
                             ResponseUsersGet friendInfo = body.response.get(0);
@@ -59,11 +71,7 @@ public class UserProfileActivity extends AppCompatActivity {
                                     .load(friendInfo.getPhotoProfile())
                                     .into(imageUserProfileView);
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<UsersGetResponse> call, Throwable t) {
-                        Log.d("sadness", "lolec");
                     }
                 });
 

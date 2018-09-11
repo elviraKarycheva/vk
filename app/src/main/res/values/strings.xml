@@ -1,10 +1,6 @@
 <resources>
     <string name="app_name">vkontaktikum</string>
 
-    <string name="phone_login_activity">Phone</string>
-    <string name="password_login_activity">Password</string>
-    <string name="sign_in_button">Sign in</string>
-
     <string name="newsfeed_btn">Newsfeed</string>
     <string name="friends_btn">Friends</string>
     <string name="groups_btn">Groups</string>
@@ -15,4 +11,9 @@
     <string name="start_messaging_btn">Message</string>
     <string name="delete_friend_btn">Delete</string>
     <string name="leave_group_btn">Leave</string>
+
+    <string name="title_alert_dialog">Отправить в подписчики?</string>
+    <string name="button_delete_friend_alert_dialog">Удалить из друзей</string>
+    <string name="cancel_alert_dialog">Отмена</string>
+
 </resources>

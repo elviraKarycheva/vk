@@ -1,4 +1,4 @@
-package com.example.karyc.vkontaktikum;
+package com.example.karyc.vkontaktikum.ui;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,6 +9,9 @@ import android.util.Log;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import com.example.karyc.vkontaktikum.R;
+import com.example.karyc.vkontaktikum.ui.friends.FriendsActivity;
 
 public class LoginActivity extends AppCompatActivity {
 

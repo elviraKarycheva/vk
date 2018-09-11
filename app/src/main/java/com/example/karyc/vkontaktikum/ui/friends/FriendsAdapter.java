@@ -1,6 +1,5 @@
-package com.example.karyc.vkontaktikum;
+package com.example.karyc.vkontaktikum.ui.friends;
 
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,14 +9,21 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.karyc.vkontaktikum.R;
+import com.example.karyc.vkontaktikum.core.Friend;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    interface FriendsAdapterListener {
+        void onUserGetInfo(long id);
+        void onButtonDeleteFriend(final long id);
+    }
 
     private final ArrayList<Friend> friends = new ArrayList<>();
-    public FriendsActivity friendActivity;
+
+    public FriendsAdapterListener listener;
 
     @NonNull
     @Override
@@ -34,10 +40,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         FriendsHolder friendsHolder = (FriendsHolder) holder;
         friendsHolder.bind(friends.get(position));
-
-
     }
-
 
     @Override
     public int getItemCount() {
@@ -51,7 +54,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     class FriendsHolder extends RecyclerView.ViewHolder {
-
         private final TextView nameView;
         private final TextView statusView;
         private final ImageView imageProfileView;
@@ -71,6 +73,11 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             if (friend.getOnline() == 1) {
                 statusView.setBackgroundResource(R.drawable.status_background_online);
             } else statusView.setBackgroundResource(R.drawable.status_background_offline);
+
+//            Glide.with()
+//                    .load(friend.getPhotoProfile())
+//                    .apply(RequestOptions.circleCropTransform())
+//                    .into(imageProfileView);
             Picasso.get()
                     .load(friend.getPhotoProfile())
                     .into(imageProfileView);
@@ -78,8 +85,8 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             imageProfileView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (friendActivity != null) {
-                        friendActivity.onUserGetInfo(friend.getId());
+                    if (listener != null) {
+                        listener.onUserGetInfo(friend.getId());
                     }
                 }
             });
@@ -87,14 +94,11 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             buttonDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (friendActivity != null) {
-                      friendActivity.onButtonDeleteFriend(friend.getId());
+                    if (listener != null) {
+                        listener.onButtonDeleteFriend(friend.getId());
                     }
                 }
             });
-
         }
-
-
     }
 }

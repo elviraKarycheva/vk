@@ -1,91 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorPrimary">
 
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <ScrollView
+    <!--TODO-->
+
+    <android.support.constraint.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:background="@color/colorPrimary">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-
-            <Button
-                android:id="@+id/buttonNewsfeed"
-                style="@style/style_btn_main"
-                android:text="@string/newsfeed_btn"
-                tools:layout_editor_absoluteX="121dp"
-                tools:layout_editor_absoluteY="219dp" />
-
-
-            <View
-                android:id="@+id/view"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorDivider"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"/>
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-            <Button
-                android:id="@+id/buttonFriends"
-                style="@style/style_btn_main"
-                android:background="@color/colorWhite"
-                android:text="@string/friends_btn"
-                tools:layout_editor_absoluteX="121dp"
-                tools:layout_editor_absoluteY="158dp" />
-            <View
-                android:id="@+id/view1"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorDivider"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"/>
+                <Button
+                    android:id="@+id/buttonNewsfeed"
+                    style="@style/style_btn_main"
+                    android:text="@string/newsfeed_btn"
+                    tools:layout_editor_absoluteX="121dp"
+                    tools:layout_editor_absoluteY="219dp" />
 
-            <Button
-                android:id="@+id/buttonGroups"
-                style="@style/style_btn_main"
-                android:background="@drawable/btn_corners_bottom"
-                android:text="@string/groups_btn" />
+                <View
+                    android:id="@+id/view"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:background="@color/colorDivider" />
 
-            <Button
-                android:id="@+id/buttonPhotos"
-                style="@style/style_btn_main"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/btn_corners"
-                android:text="@string/photos_btn" />
+                <Button
+                    android:id="@+id/buttonFriends"
+                    style="@style/style_btn_main"
+                    android:background="@color/colorWhite"
+                    android:text="@string/friends_btn"
+                    tools:layout_editor_absoluteX="121dp"
+                    tools:layout_editor_absoluteY="158dp" />
 
-            <Button
-                android:id="@+id/buttonVideos"
-                style="@style/style_btn_main"
-                android:layout_marginTop="16dp"
-                android:text="@string/videos_btn" />
-            <View
-                android:id="@+id/view2"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorDivider"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"/>
+                <View
+                    android:id="@+id/view1"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:background="@color/colorDivider" />
 
-            <Button
-                android:id="@+id/buttonBookmarks"
-                style="@style/style_btn_main"
-                android:layout_marginBottom="32dp"
-                android:background="@drawable/btn_corners_bottom"
-                android:text="@string/bookmarks_btn" />
-        </LinearLayout>
-    </ScrollView>
+                <Button
+                    android:id="@+id/buttonGroups"
+                    style="@style/style_btn_main"
+                    android:background="@drawable/btn_corners_bottom"
+                    android:text="@string/groups_btn" />
 
-</android.support.constraint.ConstraintLayout>
+                <Button
+                    android:id="@+id/buttonPhotos"
+                    style="@style/style_btn_main"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/btn_corners"
+                    android:text="@string/photos_btn" />
+
+                <Button
+                    android:id="@+id/buttonVideos"
+                    style="@style/style_btn_main"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/videos_btn" />
+
+                <View
+                    android:id="@+id/view2"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:background="@color/colorDivider" />
+
+                <Button
+                    android:id="@+id/buttonBookmarks"
+                    style="@style/style_btn_main"
+                    android:layout_marginBottom="32dp"
+                    android:background="@drawable/btn_corners_bottom"
+                    android:text="@string/bookmarks_btn" />
+            </LinearLayout>
+
+        </ScrollView>
+
+    </android.support.constraint.ConstraintLayout>
+
+</layout>

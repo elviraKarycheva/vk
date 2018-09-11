@@ -1,4 +1,4 @@
-package com.example.karyc.vkontaktikum;
+package com.example.karyc.vkontaktikum.ui.groups;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -9,7 +9,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.example.karyc.vkontaktikum.R;
+import com.example.karyc.vkontaktikum.core.Groups;
 
 import java.util.ArrayList;
 
@@ -42,7 +45,7 @@ public class GroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
 
-    public void setGroups (ArrayList<Groups> groupsArrayList){
+    public void setGroups(ArrayList<Groups> groupsArrayList) {
         groups.clear();
         groups.addAll(groupsArrayList);
         notifyDataSetChanged();
@@ -62,17 +65,23 @@ public class GroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             imageGroupView = itemView.findViewById(R.id.groupImageView);
             buttonDelete = itemView.findViewById(R.id.groupButtonDelete);
         }
-        void bind(final Groups groups){
+
+        void bind(final Groups groups) {
             nameView.setText(groups.getName());
             typeView.setText(groups.getType());
-            Picasso.get()
+
+            Glide.with(groupsActivity)
                     .load(groups.getPhoto200())
+                    .apply(RequestOptions.circleCropTransform())
                     .into(imageGroupView);
+//            Picasso.get()
+//                    .load(groups.getPhoto200())
+//                    .into(imageGroupView);
 
             buttonDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (groupsActivity != null){
+                    if (groupsActivity != null) {
                         groupsActivity.onButtonDeleteGroup(groups.getId());
                     }
                 }

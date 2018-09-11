@@ -1,8 +1,8 @@
-package com.example.karyc.vkontaktikum;
+package com.example.karyc.vkontaktikum.core.network.responseObjects;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Friend {
+public class ResponseUsersGet {
     private long id;
     @SerializedName("first_name")
     private String firstName;
@@ -11,6 +11,8 @@ public class Friend {
     @SerializedName("photo_200_orig")
     private String photoProfile;
     private int online;
+    private String site;
+    private String status;
 
     public long getId() {
         return id;
@@ -30,5 +32,13 @@ public class Friend {
 
     public int getOnline() {
         return online;
+    }
+
+    public String getSite() {
+        return site;
+    }
+
+    public String getStatus() {
+        return status;
     }
 }
