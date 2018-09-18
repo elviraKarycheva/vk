@@ -19,9 +19,10 @@ import com.example.karyc.vkontaktikum.core.network.responseObjects.ResponseGroup
 import com.example.karyc.vkontaktikum.core.network.responseObjects.ResponseGroups;
 import com.example.karyc.vkontaktikum.ui.MarginItemDecoration;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 import static com.example.karyc.vkontaktikum.ui.LoginActivity.SAVED_ACCESS_TOKEN;
 
@@ -64,30 +65,33 @@ public class GroupsActivity extends AppCompatActivity {
         mAdapter.groupsActivity = this;
         SharedPreferences sharedPreferences = getSharedPreferences("ACCESS_TOKEN_STORAGE", MODE_PRIVATE);
         accessToken = sharedPreferences.getString(SAVED_ACCESS_TOKEN, null);
-        RetrofitProvider retrofitProvider = new RetrofitProvider();
 
-        GroupsApi groupsApi = retrofitProvider.getGroupsApi();
+        GroupsApi groupsApi = RetrofitProvider.getGroupsApi();
+
         groupsApi
                 .getAllGroups(accessToken, "5.80", "groups, publics", 1)
-                .enqueue(new Callback<CommonResponse<ResponseGroups>>() {
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<CommonResponse<ResponseGroups>>() {
                     @Override
-                    public void onResponse(Call<CommonResponse<ResponseGroups>> call, Response<CommonResponse<ResponseGroups>> response) {
-                        if (response.isSuccessful()) {
-                            CommonResponse<ResponseGroups> body = response.body();
-                            Log.d("groups", body.toString());
-                            mAdapter.setGroups(body.response.items);
-                            swipeRefreshLayout.setRefreshing(false);
-                        }
+                    public void onSubscribe(Disposable d) {
+
                     }
 
                     @Override
-                    public void onFailure(Call<CommonResponse<ResponseGroups>> call, Throwable t) {
+                    public void onSuccess(CommonResponse<ResponseGroups> responseGroupsCommonResponse) {
+                        Log.d("groups", responseGroupsCommonResponse.toString());
+                        mAdapter.setGroups(responseGroupsCommonResponse.response.items);
                         swipeRefreshLayout.setRefreshing(false);
+                    }
 
+                    @Override
+                    public void onError(Throwable e) {
+                        swipeRefreshLayout.setRefreshing(false);
+                        Toast toast = Toast.makeText(GroupsActivity.this, "error", Toast.LENGTH_SHORT);
+                        toast.show();
                     }
                 });
-
-
     }
 
     public void onButtonDeleteGroup(final long id) {
@@ -117,21 +121,24 @@ public class GroupsActivity extends AppCompatActivity {
     }
 
     public void onDeleteGroup(long id) {
-        RetrofitProvider retrofitProvider = new RetrofitProvider();
-        GroupsApi groupsApi = retrofitProvider.getGroupsApi();
+        GroupsApi groupsApi = RetrofitProvider.getGroupsApi();
         groupsApi
                 .getLeaveGroup(accessToken, "5.80", id)
-                .enqueue(new Callback<CommonResponse<ResponseGroupLeave>>() {
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<CommonResponse<ResponseGroupLeave>>() {
                     @Override
-                    public void onResponse(Call<CommonResponse<ResponseGroupLeave>> call, Response<CommonResponse<ResponseGroupLeave>> response) {
-                        if (response.isSuccessful()) {
-                            CommonResponse<ResponseGroupLeave> body = response.body();
-                            Log.d("successful", body.toString());
-                        }
+                    public void onSubscribe(Disposable d) {
+
                     }
 
                     @Override
-                    public void onFailure(Call<CommonResponse<ResponseGroupLeave>> call, Throwable t) {
+                    public void onSuccess(CommonResponse<ResponseGroupLeave> responseGroupLeaveCommonResponse) {
+                        Log.d("successful", responseGroupLeaveCommonResponse.toString());
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
 
                     }
                 });

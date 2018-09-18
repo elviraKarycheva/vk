@@ -3,6 +3,7 @@ package com.example.karyc.vkontaktikum.ui.friends;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -24,14 +25,16 @@ import com.example.karyc.vkontaktikum.core.network.FriendsApi;
 import com.example.karyc.vkontaktikum.core.network.responseObjects.CommonResponse;
 import com.example.karyc.vkontaktikum.core.network.responseObjects.GetFriendsResponse;
 import com.example.karyc.vkontaktikum.core.network.responseObjects.ResponseFriendDelete;
+import com.example.karyc.vkontaktikum.databinding.OnlineFriendsFragmentBinding;
 import com.example.karyc.vkontaktikum.ui.MarginItemDecoration;
 import com.example.karyc.vkontaktikum.ui.UserProfileActivity;
 
 import java.util.ArrayList;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.example.karyc.vkontaktikum.ui.LoginActivity.SAVED_ACCESS_TOKEN;
@@ -41,6 +44,7 @@ public class OnlineFriendsFragment extends android.support.v4.app.Fragment imple
     private String accessToken;
     private SwipeRefreshLayout swipeRefreshLayout;
     public static final String ID_USER = "idUser";
+    OnlineFriendsFragmentBinding binding;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,15 +53,20 @@ public class OnlineFriendsFragment extends android.support.v4.app.Fragment imple
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.online_friends_fragment, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        binding = DataBindingUtil.inflate(
+                inflater, R.layout.online_friends_fragment, container, false);
+        View view = binding.getRoot();
+        return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        swipeRefreshLayout = view.findViewById(R.id.swipe_online_friends);
+        swipeRefreshLayout = binding.swipeOnlineFriends;
 
         swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getContext(), R.color.colorPrimary));
 
@@ -90,38 +99,42 @@ public class OnlineFriendsFragment extends android.support.v4.app.Fragment imple
         FriendsApi friendsApi = RetrofitProvider.getFriendsApi();
         friendsApi
                 .getAllFriends(accessToken, "5.80", "photo_200_orig")
-                .enqueue(new Callback<CommonResponse<GetFriendsResponse>>() {
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<CommonResponse<GetFriendsResponse>>() {
                     @Override
-                    public void onResponse(@NonNull Call<CommonResponse<GetFriendsResponse>> call, @NonNull Response<CommonResponse<GetFriendsResponse>> response) {
-                        if (response.isSuccessful()) {
-                            CommonResponse<GetFriendsResponse> body = response.body();
-                            Log.d("successful", body.toString());
-                            ArrayList<Friend> allFriends = body.response.items;
-                            ArrayList<Friend> onlineFriends = new ArrayList<>();
+                    public void onSubscribe(Disposable d) {
 
-                            for (Friend currentItem : allFriends) {
-                                if(currentItem.getOnline() == 1) {
-                                    onlineFriends.add(currentItem);
-                                }
-                            }
-                            mAdapter.setFriends(onlineFriends);
-                            swipeRefreshLayout.setRefreshing(false);
-                        }
                     }
 
                     @Override
-                    public void onFailure(@NonNull Call<CommonResponse<GetFriendsResponse>> call, @NonNull Throwable t) {
+                    public void onSuccess(CommonResponse<GetFriendsResponse> getFriendsResponseCommonResponse) {
+                        Log.d("successful", getFriendsResponseCommonResponse.toString());
+                        ArrayList<Friend> allFriends = getFriendsResponseCommonResponse.response.items;
+                        ArrayList<Friend> onlineFriends = new ArrayList<>();
+
+                        for (Friend currentItem : allFriends) {
+                            if (currentItem.getOnline() == 1) {
+                                onlineFriends.add(currentItem);
+                            }
+                        }
+                        mAdapter.setFriends(onlineFriends);
                         swipeRefreshLayout.setRefreshing(false);
                     }
-                });
 
+                    @Override
+                    public void onError(Throwable e) {
+                        swipeRefreshLayout.setRefreshing(false);
+
+                    }
+                });
 
     }
 
     public void onButtonDeleteFriend(final long id) {
-        String title = "Отправить в подписчики?";
-        String buttonDeleteFriend = "Удалить из друзей";
-        String buttonCancel = "Отмена";
+        String title = getContext().getString(R.string.title_alert_dialog);
+        String buttonDeleteFriend = getContext().getString(R.string.button_delete_friend_alert_dialog);
+        String buttonCancel = getContext().getString(R.string.cancel_alert_dialog);
 
         AlertDialog.Builder ad = new AlertDialog.Builder(getActivity());
         ad.setTitle(title);
@@ -148,18 +161,22 @@ public class OnlineFriendsFragment extends android.support.v4.app.Fragment imple
 
         friendsApi
                 .getDeleteFriend(accessToken, "5.80", id)
-                .enqueue(new Callback<CommonResponse<ResponseFriendDelete>>() {
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<CommonResponse<ResponseFriendDelete>>() {
                     @Override
-                    public void onResponse(Call<CommonResponse<ResponseFriendDelete>> call, Response<CommonResponse<ResponseFriendDelete>> response) {
-                        if (response.isSuccessful()) {
-                            CommonResponse<ResponseFriendDelete> body = response.body();
-                            Log.d("successful", body.toString());
-                            loadData();
-                        }
+                    public void onSubscribe(Disposable d) {
+
                     }
 
                     @Override
-                    public void onFailure(Call<CommonResponse<ResponseFriendDelete>> call, Throwable t) {
+                    public void onSuccess(CommonResponse<ResponseFriendDelete> responseFriendDeleteCommonResponse) {
+                        Log.d("successful", responseFriendDeleteCommonResponse.toString());
+                        loadData();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
 
                     }
                 });

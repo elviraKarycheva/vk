@@ -17,9 +17,10 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 import static com.example.karyc.vkontaktikum.ui.LoginActivity.SAVED_ACCESS_TOKEN;
 import static com.example.karyc.vkontaktikum.ui.friends.AllFriendsFragment.ID_USER;
@@ -49,31 +50,62 @@ public class UserProfileActivity extends AppCompatActivity {
         accessToken = sharedPreferences.getString(SAVED_ACCESS_TOKEN, null);
 
         FriendsApi friendsApi = RetrofitProvider.getFriendsApi();
-        friendsApi.getUserResponse(accessToken, "5.80", "photo_200_orig,status,site,online", id)
-                .enqueue(new Callback<CommonResponse<List<ResponseUsersGet>>>() {
+        friendsApi
+                .getUserResponse(accessToken, "5.80", "photo_200_orig,status,site,online", id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<CommonResponse<List<ResponseUsersGet>>>() {
                     @Override
-                    public void onFailure(Call<CommonResponse<List<ResponseUsersGet>>> call, Throwable t) {
+                    public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onResponse(Call<CommonResponse<List<ResponseUsersGet>>> call, Response<CommonResponse<List<ResponseUsersGet>>> response) {
-                        if (response.isSuccessful()) {
-                            CommonResponse<List<ResponseUsersGet>> body = response.body();
-                            Log.d("successfulinfo", body.toString());
+                    public void onSuccess(CommonResponse<List<ResponseUsersGet>> listCommonResponse) {
+                        Log.d("successfulinfo", listCommonResponse.toString());
 
-                            ResponseUsersGet friendInfo = body.response.get(0);
+                        ResponseUsersGet friendInfo = listCommonResponse.response.get(0);
 
-                            userNameView.setText(friendInfo.getFirstName() + " " + friendInfo.getLastName());
-                            statusUserView.setText(friendInfo.getStatus());
-                            siteUserView.setText(friendInfo.getSite());
-                            Picasso.get()
-                                    .load(friendInfo.getPhotoProfile())
-                                    .into(imageUserProfileView);
-                        }
+                        userNameView.setText(friendInfo.getFirstName() + " " + friendInfo.getLastName());
+                        statusUserView.setText(friendInfo.getStatus());
+                        siteUserView.setText(friendInfo.getSite());
+                        Picasso.get()
+                                .load(friendInfo.getPhotoProfile())
+                                .into(imageUserProfileView);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
 
                     }
+
                 });
+
+
+//                .enqueue(new Callback<CommonResponse<List<ResponseUsersGet>>>() {
+//                    @Override
+//                    public void onFailure(Call<CommonResponse<List<ResponseUsersGet>>> call, Throwable t) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onResponse(Call<CommonResponse<List<ResponseUsersGet>>> call, Response<CommonResponse<List<ResponseUsersGet>>> response) {
+//                        if (response.isSuccessful()) {
+//                            CommonResponse<List<ResponseUsersGet>> body = response.body();
+//                            Log.d("successfulinfo", body.toString());
+//
+//                            ResponseUsersGet friendInfo = body.response.get(0);
+//
+//                            userNameView.setText(friendInfo.getFirstName() + " " + friendInfo.getLastName());
+//                            statusUserView.setText(friendInfo.getStatus());
+//                            siteUserView.setText(friendInfo.getSite());
+//                            Picasso.get()
+//                                    .load(friendInfo.getPhotoProfile())
+//                                    .into(imageUserProfileView);
+//                        }
+//
+//                    }
+//                });
 
 
     }

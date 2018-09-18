@@ -8,15 +8,16 @@ import com.example.karyc.vkontaktikum.core.network.responseObjects.ResponseUsers
 
 import java.util.List;
 
+import io.reactivex.Single;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public interface FriendsApi {
     @GET("friends.get")
-    Call<CommonResponse<GetFriendsResponse>> getAllFriends(@Query("access_token") String accessToken,
-                                                           @Query("v") String v,
-                                                           @Query("fields") String fields);
+    Single<CommonResponse<GetFriendsResponse>> getAllFriends(@Query("access_token") String accessToken,
+                                                             @Query("v") String v,
+                                                             @Query("fields") String fields);
 
     @GET("friends.getOnline")
     Call<CommonResponse<ResponseOnlineFriends>> getOnlineFriends(@Query("online_mobile") int onlineMobile,
@@ -24,12 +25,12 @@ public interface FriendsApi {
                                                                  @Query("v") String v);
 
     @GET("friends.delete")
-    Call<CommonResponse<ResponseFriendDelete>> getDeleteFriend(@Query("access_token") String accessToken,
+    Single<CommonResponse<ResponseFriendDelete>> getDeleteFriend(@Query("access_token") String accessToken,
                                                                @Query("v") String v,
                                                                @Query("user_id") long userId);
 
     @GET("users.get")
-    Call<CommonResponse<List<ResponseUsersGet>>> getUserResponse (@Query("access_token") String accessToken,
+    Single<CommonResponse<List<ResponseUsersGet>>> getUserResponse (@Query("access_token") String accessToken,
                                                                  @Query("v") String v,
                                                                  @Query("fields") String fields,
                                                                  @Query("user_ids") long id);

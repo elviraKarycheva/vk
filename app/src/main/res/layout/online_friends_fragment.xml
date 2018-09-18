@@ -1,17 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_online_friends"
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerview_online_friends"
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_online_friends"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/colorDivider"
-            android:scrollbars="vertical" />
+            android:layout_height="match_parent">
 
-    </android.support.v4.widget.SwipeRefreshLayout>
-</android.support.constraint.ConstraintLayout>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerview_online_friends"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorDivider"
+                android:scrollbars="vertical" />
+
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+</layout>

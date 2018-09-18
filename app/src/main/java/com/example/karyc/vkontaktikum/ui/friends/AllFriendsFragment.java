@@ -26,14 +26,15 @@ import com.example.karyc.vkontaktikum.core.network.responseObjects.ResponseFrien
 import com.example.karyc.vkontaktikum.ui.MarginItemDecoration;
 import com.example.karyc.vkontaktikum.ui.UserProfileActivity;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.example.karyc.vkontaktikum.ui.LoginActivity.SAVED_ACCESS_TOKEN;
 
-public class AllFriendsFragment extends android.support.v4.app.Fragment implements FriendsAdapter.FriendsAdapterListener{
+public class AllFriendsFragment extends android.support.v4.app.Fragment implements FriendsAdapter.FriendsAdapterListener {
     private FriendsAdapter mAdapter = new FriendsAdapter();
     private String accessToken;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -88,28 +89,33 @@ public class AllFriendsFragment extends android.support.v4.app.Fragment implemen
         FriendsApi friendsApi = retrofitProvider.getFriendsApi();
         friendsApi
                 .getAllFriends(accessToken, "5.80", "photo_200_orig")
-                .enqueue(new Callback<CommonResponse<GetFriendsResponse>>() {
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<CommonResponse<GetFriendsResponse>>() {
                     @Override
-                    public void onResponse(@NonNull Call<CommonResponse<GetFriendsResponse>> call, @NonNull Response<CommonResponse<GetFriendsResponse>> response) {
-                        if (response.isSuccessful()) {
-                            CommonResponse<GetFriendsResponse> body = response.body();
-                            Log.d("successful", body.toString());
-                            mAdapter.setFriends(body.response.items);
-                            swipeRefreshLayout.setRefreshing(false);
-                        }
+                    public void onSubscribe(Disposable d) {
+
                     }
 
                     @Override
-                    public void onFailure(@NonNull Call<CommonResponse<GetFriendsResponse>> call, @NonNull Throwable t) {
+                    public void onSuccess(CommonResponse<GetFriendsResponse> getFriendsResponseCommonResponse) {
+                        Log.d("successful", getFriendsResponseCommonResponse.toString());
+                        mAdapter.setFriends(getFriendsResponseCommonResponse.response.items);
                         swipeRefreshLayout.setRefreshing(false);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        swipeRefreshLayout.setRefreshing(false);
+
                     }
                 });
     }
 
     public void onButtonDeleteFriend(final long id) {
-        String title = String.valueOf(R.string.title_alert_dialog);
-        String buttonDeleteFriend = String.valueOf(R.string.button_delete_friend_alert_dialog);
-        String buttonCancel = String.valueOf(R.string.cancel_alert_dialog);
+        String title = getContext().getString(R.string.title_alert_dialog);
+        String buttonDeleteFriend = getContext().getString(R.string.button_delete_friend_alert_dialog);
+        String buttonCancel = getContext().getString(R.string.cancel_alert_dialog);
 
         AlertDialog.Builder ad = new AlertDialog.Builder(getActivity());
         ad.setTitle(title);
@@ -136,18 +142,22 @@ public class AllFriendsFragment extends android.support.v4.app.Fragment implemen
 
         friendsApi
                 .getDeleteFriend(accessToken, "5.80", id)
-                .enqueue(new Callback<CommonResponse<ResponseFriendDelete>>() {
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<CommonResponse<ResponseFriendDelete>>() {
                     @Override
-                    public void onResponse(Call<CommonResponse<ResponseFriendDelete>> call, Response<CommonResponse<ResponseFriendDelete>> response) {
-                        if (response.isSuccessful()) {
-                            CommonResponse<ResponseFriendDelete> body = response.body();
-                            Log.d("successful", body.toString());
-                            loadData();
-                        }
+                    public void onSubscribe(Disposable d) {
+
                     }
 
                     @Override
-                    public void onFailure(Call<CommonResponse<ResponseFriendDelete>> call, Throwable t) {
+                    public void onSuccess(CommonResponse<ResponseFriendDelete> responseFriendDeleteCommonResponse) {
+                        Log.d("successful", responseFriendDeleteCommonResponse.toString());
+                        loadData();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
 
                     }
                 });
