@@ -11,6 +11,8 @@ public class Friend {
     @SerializedName("photo_200_orig")
     private String photoProfile;
     private int online;
+    @SerializedName("mobile_phone")
+    private String mobilePhone;
 
     public long getId() {
         return id;
@@ -30,5 +32,9 @@ public class Friend {
 
     public int getOnline() {
         return online;
+    }
+
+    public String getMobilePhone() {
+        return mobilePhone;
     }
 }

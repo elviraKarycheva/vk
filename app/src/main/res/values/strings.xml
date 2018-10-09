@@ -16,4 +16,6 @@
     <string name="button_delete_friend_alert_dialog">Удалить из друзей</string>
     <string name="cancel_alert_dialog">Отмена</string>
 
+    <string name="call_friend_btn">Позвонить</string>
+
 </resources>

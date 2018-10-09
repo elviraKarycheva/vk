@@ -46,4 +46,6 @@ public class ContactModel {
     public String toString() {
         return getContactName();
     }
+
+
 }

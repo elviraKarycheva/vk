@@ -84,9 +84,8 @@ public class AllFriendsFragment extends android.support.v4.app.Fragment implemen
         mAdapter.listener = this;
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("ACCESS_TOKEN_STORAGE", MODE_PRIVATE);
         accessToken = sharedPreferences.getString(SAVED_ACCESS_TOKEN, null);
-        RetrofitProvider retrofitProvider = new RetrofitProvider();
 
-        FriendsApi friendsApi = retrofitProvider.getFriendsApi();
+        FriendsApi friendsApi = RetrofitProvider.getFriendsApi();
         friendsApi
                 .getAllFriends(accessToken, "5.80", "photo_200_orig")
                 .subscribeOn(Schedulers.io())

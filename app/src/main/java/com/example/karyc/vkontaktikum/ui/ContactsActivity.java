@@ -1,6 +1,7 @@
 package com.example.karyc.vkontaktikum.ui;
 
 import android.Manifest;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
@@ -13,16 +14,26 @@ import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.example.karyc.vkontaktikum.R;
+import com.example.karyc.vkontaktikum.core.Friend;
+import com.example.karyc.vkontaktikum.core.RetrofitProvider;
+import com.example.karyc.vkontaktikum.core.network.FriendsApi;
+import com.example.karyc.vkontaktikum.core.network.responseObjects.CommonResponse;
+import com.example.karyc.vkontaktikum.core.network.responseObjects.GetFriendsResponse;
 import com.example.karyc.vkontaktikum.databinding.ActivityContactsBinding;
+import com.example.karyc.vkontaktikum.ui.friends.FriendsAdapter;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -31,99 +42,37 @@ import io.reactivex.SingleEmitter;
 import io.reactivex.SingleObserver;
 import io.reactivex.SingleOnSubscribe;
 import io.reactivex.SingleSource;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
+
+import static com.example.karyc.vkontaktikum.ui.LoginActivity.SAVED_ACCESS_TOKEN;
 
 public class ContactsActivity extends AppCompatActivity {
     private static final int READ_CONTACTS_PERMISSIONS_REQUEST = 1;
+    private String accessToken;
+    ArrayList<ContactModel> contactModels;
+    ContactsAdapter adapter = new ContactsAdapter();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActivityContactsBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_contacts);
+        binding.recyclerviewContact.setAdapter(adapter);
+        binding.recyclerviewContact.setHasFixedSize(true);
+        int dimenSide = (int) getResources().getDimension(R.dimen.margin_side);
+        int dimenTop = (int) getResources().getDimension(R.dimen.margin_top);
+        binding.recyclerviewContact.addItemDecoration(new MarginItemDecoration(dimenSide, dimenTop));
+
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
+        binding.recyclerviewContact.setLayoutManager(mLayoutManager);
 
         getPermissionToReadUserContacts();
+        contactModels = readContacts();
+        loadData();
 
-        Single
-                .just("qwe")
-                .subscribe(new SingleObserver<String>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        Log.d("qwe", "onSubscribe");
-                    }
 
-                    @Override
-                    public void onSuccess(String s) {
-                        Log.d("qwe", "onSuccess, item = " + s);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.d("qwe", "onError");
-                    }
-                });
-
-        Single
-                .just("qwe")
-                .flatMap(new Function<String, SingleSource<Integer>>() {
-                    @Override
-                    public SingleSource<Integer> apply(final String s) throws Exception {
-                        return Single.create(new SingleOnSubscribe<Integer>() {
-                            @Override
-                            public void subscribe(SingleEmitter<Integer> e) throws Exception {
-                                int length = s.length();
-                                String asd = null;
-                                asd.length();
-                                e.onSuccess(length);
-                            }
-                        });
-                    }
-                })
-                .subscribe(new SingleObserver<Integer>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        Log.d("qwe", "onSubscribe");
-                        d.dispose();
-                    }
-
-                    @Override
-                    public void onSuccess(Integer integer) {
-                        Log.d("qwe", "onSuccess, item = " + integer);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.d("qwe", "onError");
-                    }
-                });
-
-        Observable<Integer> otherIntegersObservable = Observable.just(6, 100, 8);
-
-        Observable
-                .just(1000, 76, 3)
-                .mergeWith(otherIntegersObservable)
-                .sorted()
-                .subscribe(new Observer<Integer>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        Log.d("qwe", "onSubscribe");
-                    }
-
-                    @Override
-                    public void onNext(Integer integer) {
-                        Log.d("qwe", "onSuccess, item = " + integer);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.d("qwe", "onError");
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        Log.d("qwe", "onComplete");
-                    }
-                });
     }
 
     public void getPermissionToReadUserContacts() {
@@ -242,7 +191,7 @@ public class ContactsActivity extends AppCompatActivity {
                                 .equals(ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE)) {
                             companyName = dataCursor.getString(dataCursor
                                     .getColumnIndex("data1"));
-                            contactOtherDetails += "Coompany Name : "
+                            contactOtherDetails += "Company Name : "
                                     + companyName + "n";
                             title = dataCursor.getString(dataCursor
                                     .getColumnIndex("data4"));
@@ -290,5 +239,46 @@ public class ContactsActivity extends AppCompatActivity {
             } while (contactsCursor.moveToNext());
         }
         return contactList;
+    }
+
+    private void loadData() {
+        SharedPreferences sharedPreferences = getSharedPreferences("ACCESS_TOKEN_STORAGE", MODE_PRIVATE);
+        accessToken = sharedPreferences.getString(SAVED_ACCESS_TOKEN, null);
+        FriendsApi friendsApi = RetrofitProvider.getFriendsApi();
+        friendsApi
+                .getAllFriends(accessToken, "5.80", "contacts")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<CommonResponse<GetFriendsResponse>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(CommonResponse<GetFriendsResponse> getFriendsResponseCommonResponse) {
+                        Log.d("successful", getFriendsResponseCommonResponse.toString());
+                        ArrayList<Friend> friends = getFriendsResponseCommonResponse.response.items;
+                        ArrayList<Contact> common = new ArrayList<>();//new class
+                        for (Friend currentItem : friends) {
+                            for (ContactModel currentContact : contactModels) {
+                                for (String currentMobileContact : currentContact.getContactNumber()) {
+                                    if (currentMobileContact.equals(currentItem.getMobilePhone())) {
+                                        String name = currentItem.getFirstName() + " " + currentItem.getLastName();
+                                        Contact contact = new Contact(name, currentItem.getMobilePhone());
+                                        common.add(contact);
+                                        Log.d("jd", contact.toString());
+                                    }
+                                }
+                            }
+                        }
+                        adapter.setContacts(common);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
     }
 }
