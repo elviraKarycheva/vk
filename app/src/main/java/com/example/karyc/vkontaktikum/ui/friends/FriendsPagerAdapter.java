@@ -13,9 +13,13 @@ public class FriendsPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return new AllFriendsFragment();
+                FriendsFragment friendsFragment = new FriendsFragment();
+                friendsFragment.showOnline = false;
+                return friendsFragment;
             case 1:
-                return new OnlineFriendsFragment();
+                FriendsFragment onlineFriendsFragment = new FriendsFragment();
+                onlineFriendsFragment.showOnline = true;
+                return onlineFriendsFragment;
         }
         return null;
 

@@ -1,16 +1,16 @@
 <resources>
-    <string name="app_name">vkontaktikum</string>
+    <string name="app_name">ВК</string>
 
-    <string name="newsfeed_btn">Newsfeed</string>
-    <string name="friends_btn">Friends</string>
-    <string name="groups_btn">Groups</string>
-    <string name="photos_btn">Photos</string>
-    <string name="videos_btn">Videos</string>
-    <string name="bookmarks_btn">Bookmarks</string>
+    <string name="newsfeed_btn">Новости</string>
+    <string name="friends_btn">Друзья</string>
+    <string name="groups_btn">Группы</string>
+    <string name="photos_btn">Фото</string>
+    <string name="videos_btn">Видео</string>
+    <string name="bookmarks_btn">Закладки</string>
 
-    <string name="start_messaging_btn">Message</string>
-    <string name="delete_friend_btn">Delete</string>
-    <string name="leave_group_btn">Leave</string>
+    <string name="start_messaging_btn">Сообщение</string>
+    <string name="delete_friend_btn">Удалить</string>
+    <string name="leave_group_btn">Покинуть</string>
 
     <string name="title_alert_dialog">Отправить в подписчики?</string>
     <string name="button_delete_friend_alert_dialog">Удалить из друзей</string>

@@ -23,7 +23,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 import static com.example.karyc.vkontaktikum.ui.LoginActivity.SAVED_ACCESS_TOKEN;
-import static com.example.karyc.vkontaktikum.ui.friends.AllFriendsFragment.ID_USER;
+import static com.example.karyc.vkontaktikum.ui.friends.FriendsFragment.ID_USER;
 
 public class UserProfileActivity extends AppCompatActivity {
     TextView userNameView;

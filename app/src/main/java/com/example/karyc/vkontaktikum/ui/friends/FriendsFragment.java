@@ -39,12 +39,13 @@ import io.reactivex.schedulers.Schedulers;
 import static android.content.Context.MODE_PRIVATE;
 import static com.example.karyc.vkontaktikum.ui.LoginActivity.SAVED_ACCESS_TOKEN;
 
-public class OnlineFriendsFragment extends android.support.v4.app.Fragment implements FriendsAdapter.FriendsAdapterListener {
+public class FriendsFragment extends android.support.v4.app.Fragment implements FriendsAdapter.FriendsAdapterListener {
     private FriendsAdapter mAdapter = new FriendsAdapter();
     private String accessToken;
     private SwipeRefreshLayout swipeRefreshLayout;
     public static final String ID_USER = "idUser";
     OnlineFriendsFragmentBinding binding;
+    public boolean showOnline;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -110,22 +111,25 @@ public class OnlineFriendsFragment extends android.support.v4.app.Fragment imple
                     @Override
                     public void onSuccess(CommonResponse<GetFriendsResponse> getFriendsResponseCommonResponse) {
                         Log.d("successful", getFriendsResponseCommonResponse.toString());
-                        ArrayList<Friend> allFriends = getFriendsResponseCommonResponse.response.items;
-                        ArrayList<Friend> onlineFriends = new ArrayList<>();
+                        if (showOnline == true) {
+                            ArrayList<Friend> allFriends = getFriendsResponseCommonResponse.response.items;
+                            ArrayList<Friend> onlineFriends = new ArrayList<>();
 
-                        for (Friend currentItem : allFriends) {
-                            if (currentItem.getOnline() == 1) {
-                                onlineFriends.add(currentItem);
+                            for (Friend currentItem : allFriends) {
+                                if (currentItem.getOnline() == 1) {
+                                    onlineFriends.add(currentItem);
+                                }
                             }
+                            mAdapter.setFriends(onlineFriends);
+                        } else {
+                            mAdapter.setFriends(getFriendsResponseCommonResponse.response.items);
                         }
-                        mAdapter.setFriends(onlineFriends);
                         swipeRefreshLayout.setRefreshing(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         swipeRefreshLayout.setRefreshing(false);
-
                     }
                 });
 
