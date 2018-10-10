@@ -1,6 +1,7 @@
 package com.example.karyc.vkontaktikum.ui;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -14,7 +15,6 @@ import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,28 +28,19 @@ import com.example.karyc.vkontaktikum.core.network.FriendsApi;
 import com.example.karyc.vkontaktikum.core.network.responseObjects.CommonResponse;
 import com.example.karyc.vkontaktikum.core.network.responseObjects.GetFriendsResponse;
 import com.example.karyc.vkontaktikum.databinding.ActivityContactsBinding;
-import com.example.karyc.vkontaktikum.ui.friends.FriendsAdapter;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
-import java.util.List;
 
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.Single;
-import io.reactivex.SingleEmitter;
 import io.reactivex.SingleObserver;
-import io.reactivex.SingleOnSubscribe;
-import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 import static com.example.karyc.vkontaktikum.ui.LoginActivity.SAVED_ACCESS_TOKEN;
 
-public class ContactsActivity extends AppCompatActivity {
+public class ContactsActivity extends AppCompatActivity implements ContactsAdapter.ContactsAdapterListener {
     private static final int READ_CONTACTS_PERMISSIONS_REQUEST = 1;
     private String accessToken;
     ArrayList<ContactModel> contactModels;
@@ -61,6 +52,8 @@ public class ContactsActivity extends AppCompatActivity {
         ActivityContactsBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_contacts);
         binding.recyclerviewContact.setAdapter(adapter);
         binding.recyclerviewContact.setHasFixedSize(true);
+        adapter.listener = this;
+
         int dimenSide = (int) getResources().getDimension(R.dimen.margin_side);
         int dimenTop = (int) getResources().getDimension(R.dimen.margin_top);
         binding.recyclerviewContact.addItemDecoration(new MarginItemDecoration(dimenSide, dimenTop));
@@ -71,8 +64,6 @@ public class ContactsActivity extends AppCompatActivity {
         getPermissionToReadUserContacts();
         contactModels = readContacts();
         loadData();
-
-
     }
 
     public void getPermissionToReadUserContacts() {
@@ -136,7 +127,6 @@ public class ContactsActivity extends AppCompatActivity {
                 String workEmail = "";
                 String companyName = "";
                 String title = "";
-
                 String contactEmailAddresses = "";
                 String contactOtherDetails = "";
 
@@ -152,7 +142,6 @@ public class ContactsActivity extends AppCompatActivity {
                                     .getColumnIndex("data1")); // Get Nick Name
                             contactOtherDetails += "NickName : " + nickName
                                     + "n";// Add the nick name to string
-
                         }
 
                         if (dataCursor
@@ -181,7 +170,6 @@ public class ContactsActivity extends AppCompatActivity {
                                     contactEmailAddresses += "Work Email : "
                                             + workEmail + "n";
                                     break;
-
                             }
                         }
 
@@ -196,7 +184,6 @@ public class ContactsActivity extends AppCompatActivity {
                             title = dataCursor.getString(dataCursor
                                     .getColumnIndex("data4"));
                             contactOtherDetails += "Title : " + title + "n";
-
                         }
 
                         if (dataCursor
@@ -227,15 +214,12 @@ public class ContactsActivity extends AppCompatActivity {
                                 }
                                 photoPath = tmp.getPath();
                             }
-
                         }
-
                     } while (dataCursor.moveToNext());
                     contactList.add(new ContactModel(Long.toString(contctId),
                             displayName, mobilePhone, contactEmailAddresses,
                             photoPath, contactOtherDetails));
                 }
-
             } while (contactsCursor.moveToNext());
         }
         return contactList;
@@ -252,7 +236,6 @@ public class ContactsActivity extends AppCompatActivity {
                 .subscribe(new SingleObserver<CommonResponse<GetFriendsResponse>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-
                     }
 
                     @Override
@@ -267,7 +250,6 @@ public class ContactsActivity extends AppCompatActivity {
                                         String name = currentItem.getFirstName() + " " + currentItem.getLastName();
                                         Contact contact = new Contact(name, currentItem.getMobilePhone());
                                         common.add(contact);
-                                        Log.d("jd", contact.toString());
                                     }
                                 }
                             }
@@ -280,5 +262,12 @@ public class ContactsActivity extends AppCompatActivity {
 
                     }
                 });
+    }
+
+    @Override
+    public void onButtonCallClick(Contact contact) {
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        intent.setData(Uri.parse("tel:" + contact.getPhone()));
+        startActivity(intent);
     }
 }

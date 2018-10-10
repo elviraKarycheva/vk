@@ -6,20 +6,17 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.example.karyc.vkontaktikum.R;
-import com.example.karyc.vkontaktikum.core.Groups;
 import com.example.karyc.vkontaktikum.databinding.ViewFriendsContactsItemBinding;
 
 import java.util.ArrayList;
 
 public class ContactsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    public ContactsActivity contactsActivity;
+    interface ContactsAdapterListener {
+        void onButtonCallClick(Contact contact);
+    }
+
+    public ContactsAdapterListener listener;
     private final ArrayList<Contact> contacts = new ArrayList<>();
 
     @NonNull
@@ -34,6 +31,8 @@ public class ContactsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ContactsHolder contactsHolder = (ContactsHolder) holder;
+        ClickHandler clickHandler = new ClickHandler();
+        contactsHolder.binding.setOnItemClick(clickHandler);
         contactsHolder.binding.setItem(contacts.get(position));
         contactsHolder.binding.executePendingBindings();
     }
@@ -57,6 +56,16 @@ public class ContactsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             this.binding = binding;
         }
     }
+
+    public class ClickHandler {
+        public void buttonCall(Contact contact) {
+            if (listener != null) {
+                listener.onButtonCallClick(contact);
+            }
+        }
+    }
 }
+
+
 
 

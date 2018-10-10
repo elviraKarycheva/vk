@@ -74,9 +74,6 @@ public class GroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     .load(groups.getPhoto200())
                     .apply(RequestOptions.circleCropTransform())
                     .into(imageGroupView);
-//            Picasso.get()
-//                    .load(groups.getPhoto200())
-//                    .into(imageGroupView);
 
             buttonDelete.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -5,8 +5,11 @@
         <variable
             name="item"
             type="com.example.karyc.vkontaktikum.ui.Contact" />
+        <variable
+            name="onItemClick"
+            type="com.example.karyc.vkontaktikum.ui.ContactsAdapter.ClickHandler"/>
     </data>
-    <android.support.constraint.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/btn_corners">
@@ -54,6 +57,7 @@
             android:layout_height="55dp"
             android:layout_marginEnd="8dp"
             android:background="@null"
+            android:onClick='@{(view)->onItemClick.buttonCall(item)}'
             android:text="@string/call_friend_btn"
             android:textColor="@color/btn_status"
             app:layout_constraintBottom_toBottomOf="parent"

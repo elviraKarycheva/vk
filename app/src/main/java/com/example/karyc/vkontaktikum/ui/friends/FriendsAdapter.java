@@ -74,10 +74,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 statusView.setBackgroundResource(R.drawable.status_background_online);
             } else statusView.setBackgroundResource(R.drawable.status_background_offline);
 
-//            Glide.with()
-//                    .load(friend.getPhotoProfile())
-//                    .apply(RequestOptions.circleCropTransform())
-//                    .into(imageProfileView);
             Picasso.get()
                     .load(friend.getPhotoProfile())
                     .into(imageProfileView);
