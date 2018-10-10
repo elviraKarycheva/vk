@@ -58,7 +58,7 @@
             android:layout_marginEnd="8dp"
             android:background="@null"
             android:onClick='@{(view)->onItemClick.buttonCall(item)}'
-            android:text="@string/call_friend_btn"
+            android:text="@string/contacts_screen_call_friend_btn"
             android:textColor="@color/btn_status"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

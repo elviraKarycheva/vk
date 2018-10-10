@@ -1,12 +1,17 @@
 package com.example.karyc.vkontaktikum.ui.friends;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.example.karyc.vkontaktikum.R;
+
 public class FriendsPagerAdapter extends FragmentPagerAdapter {
-    public FriendsPagerAdapter(FragmentManager fm) {
+    Context context;
+    public FriendsPagerAdapter(FragmentManager fm, Context context) {
         super(fm);
+        this.context = context;
     }
 
     @Override
@@ -34,9 +39,9 @@ public class FriendsPagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position) {
             case 0:
-                return "All friends";
+                return context.getString(R.string.friends_screen_all_friends);
             case 1:
-                return "Online";
+                return context.getString(R.string.friends_screen_online_friends);
             default:
                 return null;
         }

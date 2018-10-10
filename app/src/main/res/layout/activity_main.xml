@@ -27,7 +27,7 @@
                 <Button
                     android:id="@+id/buttonNewsfeed"
                     style="@style/style_btn_main"
-                    android:text="@string/newsfeed_btn"
+                    android:text="@string/main_screen_newsfeed_btn"
                     tools:layout_editor_absoluteX="121dp"
                     tools:layout_editor_absoluteY="219dp" />
 
@@ -43,7 +43,7 @@
                     android:id="@+id/buttonFriends"
                     style="@style/style_btn_main"
                     android:background="@color/colorWhite"
-                    android:text="@string/friends_btn"
+                    android:text="@string/main_screen_friends_btn"
                     tools:layout_editor_absoluteX="121dp"
                     tools:layout_editor_absoluteY="158dp" />
 
@@ -59,20 +59,20 @@
                     android:id="@+id/buttonGroups"
                     style="@style/style_btn_main"
                     android:background="@drawable/btn_corners_bottom"
-                    android:text="@string/groups_btn" />
+                    android:text="@string/main_screen_groups_btn" />
 
                 <Button
                     android:id="@+id/buttonPhotos"
                     style="@style/style_btn_main"
                     android:layout_marginTop="16dp"
                     android:background="@drawable/btn_corners"
-                    android:text="@string/photos_btn" />
+                    android:text="@string/main_screen_photos_btn" />
 
                 <Button
                     android:id="@+id/buttonVideos"
                     style="@style/style_btn_main"
                     android:layout_marginTop="16dp"
-                    android:text="@string/videos_btn" />
+                    android:text="@string/main_screen_videos_btn" />
 
                 <View
                     android:id="@+id/view2"
@@ -87,7 +87,7 @@
                     style="@style/style_btn_main"
                     android:layout_marginBottom="32dp"
                     android:background="@drawable/btn_corners_bottom"
-                    android:text="@string/bookmarks_btn" />
+                    android:text="@string/main_screen_bookmarks_btn" />
             </LinearLayout>
 
         </ScrollView>

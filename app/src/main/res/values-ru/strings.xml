@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ВК</string>
+
+    <string name="main_screen_newsfeed_btn">Новости</string>
+    <string name="main_screen_friends_btn">Друзья</string>
+    <string name="main_screen_groups_btn">Группы</string>
+    <string name="main_screen_photos_btn">Фото</string>
+    <string name="main_screen_videos_btn">Видео</string>
+    <string name="main_screen_bookmarks_btn">Закладки</string>
+
+
+    <string name="title_alert_dialog">Отправить в подписчики?</string>
+    <string name="button_delete_friend_alert_dialog">Удалить из друзей</string>
+    <string name="cancel_alert_dialog">Отмена</string>
+
+    <string name="contacts_screen_call_friend_btn">Позвонить</string>
+
+    <string name="friends_screen_all_friends">Все друзья</string>
+    <string name="friends_screen_online_friends">Онлайн</string>
+    <string name="friends_screen_start_messaging_btn">Сообщение</string>
+    <string name="friends_screen_delete_friend_btn">Удалить</string>
+
+    <string name="leave_group_btn">Покинуть</string>
+</resources>

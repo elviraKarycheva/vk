@@ -14,9 +14,7 @@ public class FriendsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_friends);
 
         ViewPager pager = findViewById(R.id.pager);
-        pager.setAdapter(new FriendsPagerAdapter(getSupportFragmentManager()));
-
-        FriendsPagerAdapter pagerAdapter = new FriendsPagerAdapter(getSupportFragmentManager());
+        FriendsPagerAdapter pagerAdapter = new FriendsPagerAdapter(getSupportFragmentManager(), this);
         pager.setAdapter(pagerAdapter);
 
         TabLayout tabLayout = findViewById(R.id.tablayout);
