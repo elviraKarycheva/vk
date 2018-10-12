@@ -1,4 +1,4 @@
-package com.example.karyc.vkontaktikum.ui;
+package com.example.karyc.vkontaktikum.ui.contacts;
 
 import android.support.annotation.NonNull;
 

@@ -1,25 +1,16 @@
-package com.example.karyc.vkontaktikum.ui;
+package com.example.karyc.vkontaktikum.ui.contacts;
 
-import android.Manifest;
-import android.content.Intent;
+import android.app.Application;
+import android.arch.lifecycle.AndroidViewModel;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.example.karyc.vkontaktikum.R;
 import com.example.karyc.vkontaktikum.core.Friend;
@@ -27,85 +18,99 @@ import com.example.karyc.vkontaktikum.core.RetrofitProvider;
 import com.example.karyc.vkontaktikum.core.network.FriendsApi;
 import com.example.karyc.vkontaktikum.core.network.responseObjects.CommonResponse;
 import com.example.karyc.vkontaktikum.core.network.responseObjects.GetFriendsResponse;
-import com.example.karyc.vkontaktikum.databinding.ActivityContactsBinding;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
+import io.reactivex.Single;
+import io.reactivex.SingleEmitter;
 import io.reactivex.SingleObserver;
+import io.reactivex.SingleOnSubscribe;
+import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
+import static android.content.Context.MODE_PRIVATE;
 import static com.example.karyc.vkontaktikum.ui.LoginActivity.SAVED_ACCESS_TOKEN;
 
-public class ContactsActivity extends AppCompatActivity implements ContactsAdapter.ContactsAdapterListener {
-    private static final int READ_CONTACTS_PERMISSIONS_REQUEST = 1;
-    private String accessToken;
-    ArrayList<ContactModel> contactModels;
-    ContactsAdapter adapter = new ContactsAdapter();
+public class ContactsViewModel extends AndroidViewModel {
+    private MutableLiveData<List<Contact>> contactsLiveData = new MutableLiveData<>();
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        ActivityContactsBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_contacts);
-        binding.recyclerviewContact.setAdapter(adapter);
-        binding.recyclerviewContact.setHasFixedSize(true);
-        adapter.listener = this;
-
-        int dimenSide = (int) getResources().getDimension(R.dimen.margin_side);
-        int dimenTop = (int) getResources().getDimension(R.dimen.margin_top);
-        binding.recyclerviewContact.addItemDecoration(new MarginItemDecoration(dimenSide, dimenTop));
-
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
-        binding.recyclerviewContact.setLayoutManager(mLayoutManager);
-
-        getPermissionToReadUserContacts();
-        contactModels = readContacts();
-        loadData();
+    public ContactsViewModel(@NonNull Application application) {
+        super(application);
     }
 
-    public void getPermissionToReadUserContacts() {
-        int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS);
-
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(new String[]{Manifest.permission.READ_CONTACTS},
-                        READ_CONTACTS_PERMISSIONS_REQUEST);
-            }
-        } else {
-            requestData();
-        }
+    public LiveData<List<Contact>> getContactsLiveData() {
+        return contactsLiveData;
     }
 
-    private void requestData() {
-        ArrayList<ContactModel> contactModels = readContacts();
-        Log.d("kscd", contactModels.toString());
+    public void loadData() {
+        Single<List<ContactModel>> localContactsSingle = getLocalContactsSingle();
+        Single<List<Friend>> serverContactsSingle = getServerContactsSingle();
+
+        localContactsSingle
+                .zipWith(serverContactsSingle, new BiFunction<List<ContactModel>, List<Friend>, List<Contact>>() {
+                    @Override
+                    public List<Contact> apply(List<ContactModel> contactModels, List<Friend> friends) throws Exception {
+                        ArrayList<Contact> common = new ArrayList<>();//new class
+
+                        for (Friend currentItem : friends) {
+                            for (ContactModel currentContact : contactModels) {
+                                for (String currentMobileContact : currentContact.getContactNumber()) {
+                                    if (currentMobileContact.equals(currentItem.getMobilePhone())) {
+                                        String name = currentItem.getFirstName() + " " + currentItem.getLastName();
+                                        Contact contact = new Contact(name, currentItem.getMobilePhone());
+                                        common.add(contact);
+                                    }
+                                }
+                            }
+                        }
+
+                        return common;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<List<Contact>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(List<Contact> contacts) {
+                        contactsLiveData.setValue(contacts);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
+
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String permissions[],
-                                           @NonNull int[] grantResults) {
-        if (requestCode == READ_CONTACTS_PERMISSIONS_REQUEST) {
-            if (grantResults.length == 1 &&
-                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Read Contacts permission granted", Toast.LENGTH_SHORT).show();
-                requestData();
-            } else {
-                onBackPressed();
-            }
-        } else {
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
+    private Single<List<ContactModel>> getLocalContactsSingle() {
+        return Single
+                .create(new SingleOnSubscribe<List<ContactModel>>() {
+                    @Override
+                    public void subscribe(SingleEmitter<List<ContactModel>> e) throws Exception {
+                        ArrayList<ContactModel> result = readContacts();
+                        e.onSuccess(result);
+                    }
+                });
     }
 
     private ArrayList<ContactModel> readContacts() {
         ArrayList<ContactModel> contactList = new ArrayList<>();
 
         Uri uri = ContactsContract.Contacts.CONTENT_URI;
-        Cursor contactsCursor = getContentResolver().query(uri, null, null,
+        Cursor contactsCursor = getApplication().getContentResolver().query(uri, null, null,
                 null, ContactsContract.Contacts.DISPLAY_NAME + " ASC ");
 
         if (contactsCursor.moveToFirst()) {
@@ -113,7 +118,7 @@ public class ContactsActivity extends AppCompatActivity implements ContactsAdapt
                 long contctId = contactsCursor.getLong(contactsCursor
                         .getColumnIndex("_ID"));
                 Uri dataUri = ContactsContract.Data.CONTENT_URI;
-                Cursor dataCursor = getContentResolver().query(dataUri, null,
+                Cursor dataCursor = getApplication().getContentResolver().query(dataUri, null,
                         ContactsContract.Data.CONTACT_ID + " = " + contctId,
                         null, null);
 
@@ -197,7 +202,7 @@ public class ContactsActivity extends AppCompatActivity implements ContactsAdapt
                             if (photoByte != null) {
                                 Bitmap bitmap = BitmapFactory.decodeByteArray(
                                         photoByte, 0, photoByte.length);
-                                File cacheDirectory = getBaseContext()
+                                File cacheDirectory = getApplication()
                                         .getCacheDir();
                                 File tmp = new File(cacheDirectory.getPath()
                                         + "/_androhub" + contctId + ".png");
@@ -225,49 +230,23 @@ public class ContactsActivity extends AppCompatActivity implements ContactsAdapt
         return contactList;
     }
 
-    private void loadData() {
-        SharedPreferences sharedPreferences = getSharedPreferences("ACCESS_TOKEN_STORAGE", MODE_PRIVATE);
-        accessToken = sharedPreferences.getString(SAVED_ACCESS_TOKEN, null);
+    private Single<List<Friend>> getServerContactsSingle() {
+        SharedPreferences sharedPreferences = getApplication().getSharedPreferences("ACCESS_TOKEN_STORAGE", MODE_PRIVATE);
+        String accessToken = sharedPreferences.getString(SAVED_ACCESS_TOKEN, null);
         FriendsApi friendsApi = RetrofitProvider.getFriendsApi();
-        friendsApi
+
+        return friendsApi
                 .getAllFriends(accessToken, "5.80", "contacts")
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<CommonResponse<GetFriendsResponse>>() {
+                .flatMap(new Function<CommonResponse<GetFriendsResponse>, SingleSource<? extends List<Friend>>>() {
                     @Override
-                    public void onSubscribe(Disposable d) {
-                    }
-
-                    @Override
-                    public void onSuccess(CommonResponse<GetFriendsResponse> getFriendsResponseCommonResponse) {
-                        Log.d("successful", getFriendsResponseCommonResponse.toString());
-                        ArrayList<Friend> friends = getFriendsResponseCommonResponse.response.items;
-                        ArrayList<Contact> common = new ArrayList<>();//new class
-                        for (Friend currentItem : friends) {
-                            for (ContactModel currentContact : contactModels) {
-                                for (String currentMobileContact : currentContact.getContactNumber()) {
-                                    if (currentMobileContact.equals(currentItem.getMobilePhone())) {
-                                        String name = currentItem.getFirstName() + " " + currentItem.getLastName();
-                                        Contact contact = new Contact(name, currentItem.getMobilePhone());
-                                        common.add(contact);
-                                    }
-                                }
+                    public SingleSource<? extends List<Friend>> apply(final CommonResponse<GetFriendsResponse> getFriendsResponseCommonResponse) throws Exception {
+                        return Single.create(new SingleOnSubscribe<List<Friend>>() {
+                            @Override
+                            public void subscribe(SingleEmitter<List<Friend>> e) throws Exception {
+                                e.onSuccess(getFriendsResponseCommonResponse.response.items);
                             }
-                        }
-                        adapter.setContacts(common);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
+                        });
                     }
                 });
-    }
-
-    @Override
-    public void onButtonCallClick(Contact contact) {
-        Intent intent = new Intent(Intent.ACTION_DIAL);
-        intent.setData(Uri.parse("tel:" + contact.getPhone()));
-        startActivity(intent);
     }
 }

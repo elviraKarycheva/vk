@@ -4,10 +4,10 @@
     <data>
         <variable
             name="item"
-            type="com.example.karyc.vkontaktikum.ui.Contact" />
+            type="com.example.karyc.vkontaktikum.ui.contacts.Contact" />
         <variable
             name="onItemClick"
-            type="com.example.karyc.vkontaktikum.ui.ContactsAdapter.ClickHandler"/>
+            type="com.example.karyc.vkontaktikum.ui.contacts.ContactsAdapter.ClickHandler"/>
     </data>
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"

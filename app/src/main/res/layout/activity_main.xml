@@ -87,7 +87,7 @@
                     style="@style/style_btn_main"
                     android:layout_marginBottom="32dp"
                     android:background="@drawable/btn_corners_bottom"
-                    android:text="@string/main_screen_bookmarks_btn" />
+                    android:text="@string/main_screen_contacts_btn" />
             </LinearLayout>
 
         </ScrollView>

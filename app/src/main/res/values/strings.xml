@@ -6,7 +6,7 @@
     <string name="main_screen_groups_btn">Groups</string>
     <string name="main_screen_photos_btn">Photos</string>
     <string name="main_screen_videos_btn">Videos</string>
-    <string name="main_screen_bookmarks_btn">Bookmarks</string>
+    <string name="main_screen_contacts_btn">Contacts</string>
 
     <string name="title_alert_dialog">Remove from friends?</string>
     <string name="button_delete_friend_alert_dialog">Remove from friends</string>

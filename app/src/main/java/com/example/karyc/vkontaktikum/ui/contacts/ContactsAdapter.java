@@ -1,4 +1,4 @@
-package com.example.karyc.vkontaktikum.ui;
+package com.example.karyc.vkontaktikum.ui.contacts;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.example.karyc.vkontaktikum.databinding.ViewFriendsContactsItemBinding;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ContactsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     interface ContactsAdapterListener {
@@ -37,9 +38,9 @@ public class ContactsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         contactsHolder.binding.executePendingBindings();
     }
 
-    public void setContacts(ArrayList<Contact> contactArrayList) {
+    public void setContacts(List<Contact> contactList) {
         contacts.clear();
-        contacts.addAll(contactArrayList);
+        contacts.addAll(contactList);
         notifyDataSetChanged();
     }
 

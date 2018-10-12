@@ -7,7 +7,7 @@
     <string name="main_screen_groups_btn">Группы</string>
     <string name="main_screen_photos_btn">Фото</string>
     <string name="main_screen_videos_btn">Видео</string>
-    <string name="main_screen_bookmarks_btn">Закладки</string>
+    <string name="main_screen_contacts_btn">Контакты</string>
 
 
     <string name="title_alert_dialog">Отправить в подписчики?</string>

@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.example.karyc.vkontaktikum.R;
 import com.example.karyc.vkontaktikum.databinding.ActivityMainBinding;
+import com.example.karyc.vkontaktikum.ui.contacts.ContactsActivity;
 import com.example.karyc.vkontaktikum.ui.friends.FriendsActivity;
 import com.example.karyc.vkontaktikum.ui.groups.GroupsActivity;
 
