@@ -9,9 +9,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.karyc.vkontaktikum.R;
 import com.example.karyc.vkontaktikum.core.Friend;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -74,8 +75,9 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 statusView.setBackgroundResource(R.drawable.status_background_online);
             } else statusView.setBackgroundResource(R.drawable.status_background_offline);
 
-            Picasso.get()
+            Glide.with(imageProfileView)
                     .load(friend.getPhotoProfile())
+                    .apply(RequestOptions.circleCropTransform())
                     .into(imageProfileView);
 
             imageProfileView.setOnClickListener(new View.OnClickListener() {

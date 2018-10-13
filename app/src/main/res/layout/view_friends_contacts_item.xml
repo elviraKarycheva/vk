@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <data>
+
         <variable
             name="item"
             type="com.example.karyc.vkontaktikum.ui.contacts.Contact" />
+
         <variable
             name="onItemClick"
-            type="com.example.karyc.vkontaktikum.ui.contacts.ContactsAdapter.ClickHandler"/>
+            type="com.example.karyc.vkontaktikum.ui.contacts.ContactsAdapter.ClickHandler" />
     </data>
+
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,34 +22,34 @@
             android:id="@+id/nameFriendView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:text="@{item.name}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageContactProfileView"
-            app:layout_constraintTop_toTopOf="parent"
-            android:text="@{item.name}" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/phoneView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
             android:fontFamily="@font/roboto_regular"
+            android:text="@{item.phone}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageContactProfileView"
-            app:layout_constraintTop_toBottomOf="@+id/nameFriendView"
-            android:text="@{item.phone}" />
+            app:layout_constraintTop_toBottomOf="@+id/nameFriendView" />
 
         <ImageView
             android:id="@+id/imageContactProfileView"
             android:layout_width="108dp"
             android:layout_height="108dp"
-            android:layout_marginBottom="16dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
             android:scaleType="centerCrop"
             app:imageUrl="@{item.photo}"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -69,8 +73,8 @@
             android:id="@+id/view4"
             android:layout_width="wrap_content"
             android:layout_height="1dp"
-            android:layout_marginBottom="16dp"
             android:layout_marginStart="8dp"
+            android:layout_marginBottom="16dp"
             android:background="@color/colorDivider"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageContactProfileView"

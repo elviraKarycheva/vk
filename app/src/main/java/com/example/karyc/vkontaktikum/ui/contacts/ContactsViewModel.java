@@ -126,7 +126,6 @@ public class ContactsViewModel extends AndroidViewModel {
                 ArrayList<String> mobilePhone = new ArrayList<>();
                 String photoPath = null; // Photo path
                 byte[] photoByte = null;// Byte to get photo since it will come
-                // in BLOB
                 String homeEmail = "";
                 String workEmail = "";
                 String companyName = "";
