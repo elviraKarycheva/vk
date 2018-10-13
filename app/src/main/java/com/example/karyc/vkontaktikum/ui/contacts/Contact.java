@@ -2,16 +2,17 @@ package com.example.karyc.vkontaktikum.ui.contacts;
 
 import android.support.annotation.NonNull;
 
-import java.util.ArrayList;
-
 public class Contact {
 
     private String name;
     private String phone;
+    private String photo;
 
-    public Contact(@NonNull String name,@NonNull String phone) {
+    public Contact(@NonNull String name,@NonNull String phone, @NonNull String photo) {
         this.name = name;
         this.phone = phone;
+        this.photo = photo;
+
     }
 
     public String getName() {
@@ -20,6 +21,10 @@ public class Contact {
 
     public String getPhone() {
         return phone;
+    }
+
+    public String getPhoto() {
+        return photo;
     }
 
     @Override

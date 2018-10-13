@@ -12,7 +12,6 @@ import android.net.Uri;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 
-import com.example.karyc.vkontaktikum.R;
 import com.example.karyc.vkontaktikum.core.Friend;
 import com.example.karyc.vkontaktikum.core.RetrofitProvider;
 import com.example.karyc.vkontaktikum.core.network.FriendsApi;
@@ -64,7 +63,7 @@ public class ContactsViewModel extends AndroidViewModel {
                                 for (String currentMobileContact : currentContact.getContactNumber()) {
                                     if (currentMobileContact.equals(currentItem.getMobilePhone())) {
                                         String name = currentItem.getFirstName() + " " + currentItem.getLastName();
-                                        Contact contact = new Contact(name, currentItem.getMobilePhone());
+                                        Contact contact = new Contact(name, currentItem.getMobilePhone(), currentContact.getContactPhoto());
                                         common.add(contact);
                                     }
                                 }
@@ -125,7 +124,7 @@ public class ContactsViewModel extends AndroidViewModel {
                 String displayName = "";
                 String nickName = "";
                 ArrayList<String> mobilePhone = new ArrayList<>();
-                String photoPath = "" + R.drawable.ic_launcher_background; // Photo path
+                String photoPath = null; // Photo path
                 byte[] photoByte = null;// Byte to get photo since it will come
                 // in BLOB
                 String homeEmail = "";
@@ -192,12 +191,10 @@ public class ContactsViewModel extends AndroidViewModel {
                         }
 
                         if (dataCursor
-                                .getString(
-                                        dataCursor.getColumnIndex("mimetype"))
+                                .getString(dataCursor.getColumnIndex("mimetype"))
                                 .equals(ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE)) {
                             photoByte = dataCursor.getBlob(dataCursor
-                                    .getColumnIndex("data15")); // get photo in
-                            // byte
+                                    .getColumnIndex("data15"));
 
                             if (photoByte != null) {
                                 Bitmap bitmap = BitmapFactory.decodeByteArray(
@@ -214,16 +211,18 @@ public class ContactsViewModel extends AndroidViewModel {
                                     fileOutputStream.flush();
                                     fileOutputStream.close();
                                 } catch (Exception e) {
-                                    // TODO: handle exception
                                     e.printStackTrace();
                                 }
                                 photoPath = tmp.getPath();
                             }
                         }
                     } while (dataCursor.moveToNext());
-                    contactList.add(new ContactModel(Long.toString(contctId),
+
+                    ContactModel newContact = new ContactModel(Long.toString(contctId),
                             displayName, mobilePhone, contactEmailAddresses,
-                            photoPath, contactOtherDetails));
+                            photoPath, contactOtherDetails);
+
+                    contactList.add(newContact);
                 }
             } while (contactsCursor.moveToNext());
         }
