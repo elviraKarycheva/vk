@@ -1,6 +1,7 @@
 package com.example.karyc.vkontaktikum.ui;
 
 import android.databinding.BindingAdapter;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -17,5 +18,12 @@ public class CustomDataBindings {
                         .placeholder(R.color.colorDivider)
                         .fallback(R.drawable.ic_baseline_face_24px))
                 .into(view);
+    }
+
+    @BindingAdapter("online")
+    public static void setBackground(View view, int online) {
+        if (online == 1) {
+            view.setBackgroundResource(R.drawable.status_background_online);
+        } else view.setBackgroundResource(R.drawable.status_background_offline);
     }
 }

@@ -1,78 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/btn_corners">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
-        android:id="@+id/nameView"
-        android:layout_width="wrap_content"
+    <data>
+
+        <variable
+            name="item"
+            type="com.example.karyc.vkontaktikum.core.Friend" />
+
+        <variable
+            name="onItemClick"
+            type="com.example.karyc.vkontaktikum.ui.friends.FriendsAdapter.ClickHandler" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toEndOf="@+id/statusView"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="TextView" />
+        android:background="@drawable/btn_corners">
 
-    <TextView
-        android:id="@+id/statusView"
-        android:layout_width="12dp"
-        android:layout_height="12dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:fontFamily="@font/roboto_regular"
-        app:layout_constraintStart_toEndOf="@+id/imageProfileView"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/nameView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:text="@{item.firstName + ' ' + item.lastName}"
+            app:layout_constraintStart_toEndOf="@+id/statusView"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="TextView" />
 
-    <ImageView
-        android:id="@+id/imageProfileView"
-        android:layout_width="108dp"
-        android:layout_height="108dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/statusView"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            app:online="@{item.online}"
+            android:fontFamily="@font/roboto_regular"
+            app:layout_constraintStart_toEndOf="@+id/imageProfileView"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/buttonMessage"
-        android:layout_width="0dp"
-        android:layout_height="55dp"
-        android:layout_marginStart="8dp"
-        android:background="@null"
-        android:text="@string/friends_screen_start_messaging_btn"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/buttonDelete"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toEndOf="@+id/imageProfileView" />
+        <ImageView
+            android:id="@+id/imageProfileView"
+            android:layout_width="108dp"
+            android:layout_height="108dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:onClick='@{(view)->onItemClick.buttonGetInfo(item)}'
+            android:scaleType="centerCrop"
+            app:imageUrl="@{item.photoProfile}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/buttonDelete"
-        android:layout_width="0dp"
-        android:layout_height="55dp"
-        android:layout_marginEnd="8dp"
-        android:background="@null"
-        android:text="@string/friends_screen_delete_friend_btn"
-        android:textColor="@color/btn_status"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/buttonMessage" />
+        <Button
+            android:id="@+id/buttonMessage"
+            android:layout_width="0dp"
+            android:layout_height="55dp"
+            android:layout_marginStart="8dp"
+            android:background="@null"
+            android:text="@string/friends_screen_start_messaging_btn"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/buttonDelete"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toEndOf="@+id/imageProfileView" />
 
-    <View
-        android:id="@+id/view4"
-        android:layout_width="wrap_content"
-        android:layout_height="1dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginStart="8dp"
-        android:background="@color/colorDivider"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imageProfileView"
-        app:layout_constraintTop_toBottomOf="@+id/nameView" />
+        <Button
+            android:id="@+id/buttonDelete"
+            android:layout_width="0dp"
+            android:layout_height="55dp"
+            android:layout_marginEnd="8dp"
+            android:background="@null"
+            android:onClick='@{(view)->onItemClick.buttonDeleteFriend(item)}'
+            android:text="@string/friends_screen_delete_friend_btn"
+            android:textColor="@color/btn_status"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/buttonMessage" />
 
-</android.support.constraint.ConstraintLayout>
+        <View
+            android:id="@+id/view4"
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="16dp"
+            android:background="@color/colorDivider"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageProfileView"
+            app:layout_constraintTop_toBottomOf="@+id/nameView" />
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

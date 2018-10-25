@@ -5,14 +5,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.example.karyc.vkontaktikum.R;
 import com.example.karyc.vkontaktikum.core.Friend;
+import com.example.karyc.vkontaktikum.databinding.FriendItemBinding;
 
 import java.util.ArrayList;
 
@@ -23,7 +18,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     private final ArrayList<Friend> friends = new ArrayList<>();
-
     public FriendsAdapterListener listener;
 
     @NonNull
@@ -31,16 +25,18 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater;
         inflater = LayoutInflater.from(parent.getContext());
+        FriendItemBinding binding = FriendItemBinding.inflate(inflater);
 
-        View itemView = inflater.inflate(R.layout.friend_item, parent, false);
-
-        return new FriendsHolder(itemView);
+        return new FriendsHolder(binding.getRoot(), binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         FriendsHolder friendsHolder = (FriendsHolder) holder;
-        friendsHolder.bind(friends.get(position));
+        FriendsAdapter.ClickHandler clickHandler = new FriendsAdapter.ClickHandler();
+        friendsHolder.binding.setOnItemClick(clickHandler);
+        friendsHolder.binding.setItem(friends.get(position));
+        friendsHolder.binding.executePendingBindings();
     }
 
     @Override
@@ -55,48 +51,25 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     class FriendsHolder extends RecyclerView.ViewHolder {
-        private final TextView nameView;
-        private final TextView statusView;
-        private final ImageView imageProfileView;
-        Button buttonDelete;
+        FriendItemBinding binding;
 
-        FriendsHolder(View view) {
+        FriendsHolder(View view, FriendItemBinding binding) {
             super(view);
+            this.binding = binding;
+        }
+    }
 
-            nameView = view.findViewById(R.id.nameView);
-            statusView = view.findViewById(R.id.statusView);
-            imageProfileView = view.findViewById(R.id.imageProfileView);
-            buttonDelete = view.findViewById(R.id.buttonDelete);
+    public class ClickHandler {
+        public void buttonGetInfo(Friend friend) {
+            if (listener != null) {
+                listener.onUserGetInfo(friend.getId());
+            }
         }
 
-        void bind(final Friend friend) {
-            nameView.setText(friend.getFirstName() + " " + friend.getLastName());
-            if (friend.getOnline() == 1) {
-                statusView.setBackgroundResource(R.drawable.status_background_online);
-            } else statusView.setBackgroundResource(R.drawable.status_background_offline);
-
-            Glide.with(imageProfileView)
-                    .load(friend.getPhotoProfile())
-                    .apply(RequestOptions.circleCropTransform())
-                    .into(imageProfileView);
-
-            imageProfileView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null) {
-                        listener.onUserGetInfo(friend.getId());
-                    }
-                }
-            });
-
-            buttonDelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null) {
-                        listener.onButtonDeleteFriend(friend.getId());
-                    }
-                }
-            });
+        public void buttonDeleteFriend(Friend friend) {
+            if (listener != null) {
+                listener.onButtonDeleteFriend(friend.getId());
+            }
         }
     }
 }

@@ -39,7 +39,6 @@ public class ContactsActivity extends AppCompatActivity implements ContactsAdapt
                 if (contacts == null){
                     return;
                 }
-
                 adapter.setContacts(contacts);
             }
         });

@@ -52,7 +52,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     class ContactsHolder extends RecyclerView.ViewHolder {
         ViewFriendsContactsItemBinding binding;
 
-        public ContactsHolder(View itemView, ViewFriendsContactsItemBinding binding) {
+        ContactsHolder(View itemView, ViewFriendsContactsItemBinding binding) {
             super(itemView);
             this.binding = binding;
         }
@@ -65,6 +65,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
         }
     }
+
 }
 
 

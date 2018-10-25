@@ -44,11 +44,11 @@ public class ContactsViewModel extends AndroidViewModel {
         super(application);
     }
 
-    public LiveData<List<Contact>> getContactsLiveData() {
+    LiveData<List<Contact>> getContactsLiveData() {
         return contactsLiveData;
     }
 
-    public void loadData() {
+    void loadData() {
         Single<List<ContactModel>> localContactsSingle = getLocalContactsSingle();
         Single<List<Friend>> serverContactsSingle = getServerContactsSingle();
 
