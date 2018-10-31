@@ -1,61 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/btn_corners">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
-        android:id="@+id/groupNameView"
-        android:layout_width="0dp"
+    <data>
+
+        <variable
+            name="item"
+            type="com.example.karyc.vkontaktikum.core.Group" />
+
+        <variable
+            name="onItemClick"
+            type="com.example.karyc.vkontaktikum.ui.groups.GroupsAdapter.GroupsClickHandler" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:ellipsize="end"
-        android:fontFamily="@font/roboto_regular"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/groupImageView"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="TextView" />
+        android:background="@drawable/btn_corners">
 
-    <TextView
-        android:id="@+id/groupTypeView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toEndOf="@+id/groupImageView"
-        app:layout_constraintTop_toBottomOf="@+id/groupNameView"
-        tools:text="TextView" />
+        <TextView
+            android:id="@+id/groupNameView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/roboto_regular"
+            android:text="@{item.name}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/groupImageView"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="TextVieweeeeeeeeeeeeeeeeeeeeeessseeeeeeeeeeeeeeeeeeee" />
 
-    <ImageView
-        android:id="@+id/groupImageView"
-        android:layout_width="96dp"
-        android:layout_height="96dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:scaleType="centerCrop"/>
+        <TextView
+            android:id="@+id/groupTypeView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:text="@{item.type}"
+            app:layout_constraintStart_toEndOf="@+id/groupImageView"
+            app:layout_constraintTop_toBottomOf="@+id/groupNameView"
+            tools:text="TextView" />
 
-    <Button
-        android:id="@+id/groupButtonDelete"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="40dp"
-        android:background="@null"
-        android:text="@string/leave_group_btn"
-        android:textColor="@color/btn_status"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        <ImageView
+            android:id="@+id/groupImageView"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:scaleType="centerCrop"
+            app:imageUrl="@{item.photo200}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-</android.support.constraint.ConstraintLayout>
+        <Button
+            android:id="@+id/groupButtonDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@null"
+            android:onClick='@{(view)->onItemClick.buttonLeaveGroup(item)}'
+            android:text="@string/leave_group_btn"
+            android:textColor="@color/btn_status"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

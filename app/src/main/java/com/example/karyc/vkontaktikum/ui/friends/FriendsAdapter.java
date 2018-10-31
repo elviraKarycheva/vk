@@ -14,6 +14,7 @@ import java.util.ArrayList;
 public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     interface FriendsAdapterListener {
         void onUserGetInfo(long id);
+
         void onButtonDeleteFriend(final long id);
     }
 
@@ -23,8 +24,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater;
-        inflater = LayoutInflater.from(parent.getContext());
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         FriendItemBinding binding = FriendItemBinding.inflate(inflater);
 
         return new FriendsHolder(binding.getRoot(), binding);

@@ -1,113 +1,83 @@
 package com.example.karyc.vkontaktikum.ui.groups;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.example.karyc.vkontaktikum.R;
-import com.example.karyc.vkontaktikum.core.RetrofitProvider;
-import com.example.karyc.vkontaktikum.core.network.GroupsApi;
-import com.example.karyc.vkontaktikum.core.network.responseObjects.CommonResponse;
-import com.example.karyc.vkontaktikum.core.network.responseObjects.ResponseGroupLeave;
-import com.example.karyc.vkontaktikum.core.network.responseObjects.ResponseGroups;
+import com.example.karyc.vkontaktikum.core.Group;
+import com.example.karyc.vkontaktikum.databinding.ActivityGroupsBinding;
 import com.example.karyc.vkontaktikum.ui.MarginItemDecoration;
 
-import io.reactivex.SingleObserver;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
+import java.util.ArrayList;
 
-import static com.example.karyc.vkontaktikum.ui.LoginActivity.SAVED_ACCESS_TOKEN;
-
-public class GroupsActivity extends AppCompatActivity {
-    private GroupsAdapter mAdapter = new GroupsAdapter();
-    private String accessToken;
-    private AlertDialog.Builder ad;
-    private SwipeRefreshLayout swipeRefreshLayout;
+public class GroupsActivity extends AppCompatActivity implements GroupsAdapter.GroupsAdapterListener{
+    private GroupsAdapter adapter = new GroupsAdapter();
+    ActivityGroupsBinding binding;
+    private GroupsViewModel viewModel;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_groups);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_groups);
+        viewModel = ViewModelProviders.of(this).get(GroupsViewModel.class);
+        viewModel.getGroupsLiveData().observe(this, new Observer<ArrayList<Group>>() {
+            @Override
+            public void onChanged(@Nullable ArrayList<Group> groups) {
+                if (groups == null) {
+                    return;
+                }
+                adapter.setGroups(groups);
+                binding.swipeGroups.setRefreshing(false);
+            }
+        });
 
-        swipeRefreshLayout = findViewById(R.id.swipe_groups);
+        RecyclerView recyclerView = binding.recyclerviewGroups;
+        binding.recyclerviewGroups.setHasFixedSize(true);
+        recyclerView.setAdapter(adapter);
+        adapter.listener = this;
 
-        RecyclerView mRecyclerView = findViewById(R.id.recyclerview_groups);
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setAdapter(mAdapter);
         int dimenSide = (int) getResources().getDimension(R.dimen.margin_side);
         int dimenTop = (int) getResources().getDimension(R.dimen.margin_top);
-        mRecyclerView.addItemDecoration(new MarginItemDecoration(dimenSide, dimenTop));
+        recyclerView.addItemDecoration(new MarginItemDecoration(dimenSide, dimenTop));
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setLayoutManager(mLayoutManager);
 
-        loadData();
+        viewModel.loadData();
 
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        binding.swipeGroups.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                loadData();
+               viewModel.loadData();
             }
         });
     }
 
-    private void loadData() {
-        swipeRefreshLayout.setRefreshing(true);
-        mAdapter.groupsActivity = this;
-        SharedPreferences sharedPreferences = getSharedPreferences("ACCESS_TOKEN_STORAGE", MODE_PRIVATE);
-        accessToken = sharedPreferences.getString(SAVED_ACCESS_TOKEN, null);
-
-        GroupsApi groupsApi = RetrofitProvider.getGroupsApi();
-
-        groupsApi
-                .getAllGroups(accessToken, "5.80", "groups, publics", 1)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<CommonResponse<ResponseGroups>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onSuccess(CommonResponse<ResponseGroups> responseGroupsCommonResponse) {
-                        Log.d("groups", responseGroupsCommonResponse.toString());
-                        mAdapter.setGroups(responseGroupsCommonResponse.response.items);
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        swipeRefreshLayout.setRefreshing(false);
-                        Toast toast = Toast.makeText(GroupsActivity.this, "error", Toast.LENGTH_SHORT);
-                        toast.show();
-                    }
-                });
-    }
-
-    public void onButtonDeleteGroup(final long id) {
-
+    @Override
+    public void onButtonLeaveGroup(final long id) {
         String title = "Выйти из группы?";
         String leaveGroup = "Покинуть группу";
         String buttonCancel = "Отмена";
 
-        ad = new AlertDialog.Builder(GroupsActivity.this);
+        AlertDialog.Builder ad = new AlertDialog.Builder(GroupsActivity.this);
         ad.setTitle(title);
         ad.setPositiveButton(leaveGroup, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int arg1) {
                 Toast.makeText(GroupsActivity.this, "Вы сделали правильный выбор",
                         Toast.LENGTH_LONG).show();
-                onDeleteGroup(id);
-                loadData();
+                viewModel.onDeleteGroup(id);
+                viewModel.loadData();
             }
         });
         ad.setNegativeButton(buttonCancel, new DialogInterface.OnClickListener() {
@@ -118,29 +88,5 @@ public class GroupsActivity extends AppCompatActivity {
         });
         ad.setCancelable(true);
         ad.show();
-    }
-
-    public void onDeleteGroup(long id) {
-        GroupsApi groupsApi = RetrofitProvider.getGroupsApi();
-        groupsApi
-                .getLeaveGroup(accessToken, "5.80", id)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<CommonResponse<ResponseGroupLeave>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onSuccess(CommonResponse<ResponseGroupLeave> responseGroupLeaveCommonResponse) {
-                        Log.d("successful", responseGroupLeaveCommonResponse.toString());
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-                });
     }
 }

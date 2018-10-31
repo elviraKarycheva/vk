@@ -1,10 +1,32 @@
 package com.example.karyc.vkontaktikum.core;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
+
 import com.google.gson.annotations.SerializedName;
 
-public class Groups {
+@Entity
+public class Group {
+    public Group(long id, @NonNull String name, String screenName, int isClosed, String type, int isAdmin,
+                 int isMember, String photo50, String photo100, String photo200) {
+        this.id = id;
+        this.name = name;
+        this.screenName = screenName;
+        this.isClosed = isClosed;
+        this.type = type;
+        this.isAdmin = isAdmin;
+        this.isMember = isMember;
+        this.photo50 = photo50;
+        this.photo100 = photo100;
+        this.photo200 = photo200;
+    }
+
     private long id;
+    @PrimaryKey
+    @NonNull
     private String name;
+
     @SerializedName("screen_name")
     private String screenName;
     @SerializedName("is_closed")

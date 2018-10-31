@@ -6,7 +6,6 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.example.karyc.vkontaktikum.core.Friend;
 import com.example.karyc.vkontaktikum.core.RetrofitProvider;
@@ -92,7 +91,6 @@ public class FriendsViewModel extends AndroidViewModel {
 
                     @Override
                     public void onSuccess(CommonResponse<ResponseFriendDelete> responseFriendDeleteCommonResponse) {
-                        Log.d("successful", responseFriendDeleteCommonResponse.toString());
                         loadData(showOnline);
                     }
 

@@ -5,38 +5,40 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.example.karyc.vkontaktikum.R;
-import com.example.karyc.vkontaktikum.core.Groups;
+import com.example.karyc.vkontaktikum.core.Group;
+import com.example.karyc.vkontaktikum.databinding.GroupItemBinding;
 
 import java.util.ArrayList;
 
 public class GroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    public GroupsActivity groupsActivity;
-    private final ArrayList<Groups> groups = new ArrayList<>();
+    interface GroupsAdapterListener {
+        void onButtonLeaveGroup(final long id);
+    }
+
+    private final ArrayList<Group> groups = new ArrayList<>();
+    public GroupsAdapter.GroupsAdapterListener listener;
 
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater;
-        inflater = LayoutInflater.from(parent.getContext());
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        GroupItemBinding binding = GroupItemBinding.inflate(inflater);
 
-        View itemView = inflater.inflate(R.layout.group_item, parent, false);
+        RecyclerView.LayoutParams lp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        binding.getRoot().setLayoutParams(lp);
 
-        return new GroupsHolder(itemView);
+        return new GroupsHolder(binding.getRoot(), binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         GroupsHolder groupsHolder = (GroupsHolder) holder;
-        groupsHolder.bind(groups.get(position));
-
+        GroupsAdapter.GroupsClickHandler clickHandler = new GroupsAdapter.GroupsClickHandler();
+        groupsHolder.binding.setOnItemClick(clickHandler);
+        groupsHolder.binding.setItem(groups.get(position));
+        groupsHolder.binding.executePendingBindings();
     }
 
     @Override
@@ -45,44 +47,32 @@ public class GroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
 
-    public void setGroups(ArrayList<Groups> groupsArrayList) {
+    public void setGroups(ArrayList<Group> groupsArrayList) {
         groups.clear();
         groups.addAll(groupsArrayList);
         notifyDataSetChanged();
     }
 
     class GroupsHolder extends RecyclerView.ViewHolder {
+        GroupItemBinding binding;
 
-        private final TextView nameView;
-        private final TextView typeView;
-        private final ImageView imageGroupView;
-        Button buttonDelete;
-
-        public GroupsHolder(View itemView) {
-            super(itemView);
-            nameView = itemView.findViewById(R.id.groupNameView);
-            typeView = itemView.findViewById(R.id.groupTypeView);
-            imageGroupView = itemView.findViewById(R.id.groupImageView);
-            buttonDelete = itemView.findViewById(R.id.groupButtonDelete);
+        GroupsHolder(View view, GroupItemBinding binding) {
+            super(view);
+            this.binding = binding;
         }
+    }
 
-        void bind(final Groups groups) {
-            nameView.setText(groups.getName());
-            typeView.setText(groups.getType());
+    public class GroupsClickHandler {
+//        public void buttonGetInfo(Group group) {
+//            if (listener != null) {
+//                listener.onGroupGetInfo(group.getId());
+//            }
+//        }
 
-            Glide.with(groupsActivity)
-                    .load(groups.getPhoto200())
-                    .apply(RequestOptions.circleCropTransform())
-                    .into(imageGroupView);
-
-            buttonDelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (groupsActivity != null) {
-                        groupsActivity.onButtonDeleteGroup(groups.getId());
-                    }
-                }
-            });
+        public void buttonLeaveGroup(Group group) {
+            if (listener != null) {
+                listener.onButtonLeaveGroup(group.getId());
+            }
         }
     }
 }
