@@ -19,4 +19,5 @@ public interface GroupsApi {
     Single<CommonResponse<ResponseGroupLeave>> getLeaveGroup (@Query("access_token") String accessToken,
                                                             @Query("v") String v,
                                                             @Query("group_id") long id);
+//    @GET("")
 }

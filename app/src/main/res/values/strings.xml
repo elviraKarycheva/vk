@@ -8,9 +8,10 @@
     <string name="main_screen_videos_btn">Videos</string>
     <string name="main_screen_contacts_btn">Contacts</string>
 
-    <string name="title_alert_dialog">Remove from friends?</string>
+    <string name="title_friends_alert_dialog">Remove from friends?</string>
     <string name="button_delete_friend_alert_dialog">Remove from friends</string>
     <string name="cancel_alert_dialog">Cancel</string>
+    <string name="success_delete_friend_ad_toast">Friend removed</string>
 
     <string name="contacts_screen_call_friend_btn">Call</string>
 
@@ -20,4 +21,10 @@
     <string name="friends_screen_delete_friend_btn">Delete</string>
 
     <string name="leave_group_btn">Leave</string>
+    <string name="join_group_btn">Join</string>
+    
+    <string name="title_group_alert_dialog">Leave group?</string>
+    <string name="button_leave_group_alert_dialog">Leave</string>
+    <string name="success_leave_group_ad_toast">Group left</string>
+
 </resources>

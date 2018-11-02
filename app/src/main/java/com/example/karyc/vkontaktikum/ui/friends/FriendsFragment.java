@@ -102,7 +102,7 @@ public class FriendsFragment extends android.support.v4.app.Fragment implements 
         if (getActivity() == null) {
             return;
         }
-        String title = this.getString(R.string.title_alert_dialog);
+        String title = this.getString(R.string.title_friends_alert_dialog);
         String buttonDeleteFriend = this.getString(R.string.button_delete_friend_alert_dialog);
         String buttonCancel = this.getString(R.string.cancel_alert_dialog);
 
@@ -110,15 +110,14 @@ public class FriendsFragment extends android.support.v4.app.Fragment implements 
         ad.setTitle(title);
         ad.setPositiveButton(buttonDeleteFriend, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int arg1) {
-                Toast.makeText(getActivity(), "Good",
+                Toast.makeText(getActivity(), getString(R.string.success_delete_friend_ad_toast),
                         Toast.LENGTH_LONG).show();
                 viewModel.onDeleteFriend(id, showOnline);
             }
         });
         ad.setNegativeButton(buttonCancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int arg1) {
-                Toast.makeText(getActivity(), "You're right", Toast.LENGTH_LONG)
-                        .show();
+
             }
         });
         ad.setCancelable(true);

@@ -2,13 +2,12 @@ package com.example.karyc.vkontaktikum.core;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
-import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
 @Entity
 public class Group {
-    public Group(long id, @NonNull String name, String screenName, int isClosed, String type, int isAdmin,
+    public Group(long id, String name, String screenName, int isClosed, String type, int isAdmin,
                  int isMember, String photo50, String photo100, String photo200) {
         this.id = id;
         this.name = name;
@@ -22,11 +21,9 @@ public class Group {
         this.photo200 = photo200;
     }
 
-    private long id;
     @PrimaryKey
-    @NonNull
+    private long id;
     private String name;
-
     @SerializedName("screen_name")
     private String screenName;
     @SerializedName("is_closed")
@@ -42,6 +39,11 @@ public class Group {
     private String photo100;
     @SerializedName("photo_200")
     private String photo200;
+
+    /**
+     * локальное поле, необходимое только для сохранения порядка с сервера
+     */
+    private int order;
 
     public long getId() {
         return id;
@@ -81,5 +83,13 @@ public class Group {
 
     public String getPhoto200() {
         return photo200;
+    }
+
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
     }
 }

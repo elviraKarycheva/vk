@@ -16,6 +16,8 @@ import com.example.karyc.vkontaktikum.core.network.responseObjects.ResponseGroup
 import com.example.karyc.vkontaktikum.core.network.responseObjects.ResponseGroups;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import io.reactivex.Single;
@@ -54,14 +56,19 @@ public class GroupsViewModel extends AndroidViewModel {
                 .map(new Function<CommonResponse<ResponseGroups>, CommonResponse<ResponseGroups>>() {
                     @Override
                     public CommonResponse<ResponseGroups> apply(CommonResponse<ResponseGroups> responseGroupsCommonResponse) throws Exception {
+                        App.getDatabase().getGroupDao().deleteAll();
+                        for (int i = 0; i < responseGroupsCommonResponse.response.items.size(); i++) {
+                            Group group = responseGroupsCommonResponse.response.items.get(i);
+                            group.setOrder(i);
+                        }
                         App.getDatabase().getGroupDao().insert(responseGroupsCommonResponse.response.items);
-                        return responseGroupsCommonResponse;
+                        return responseGroupsCommonResponse;// положили в БД
                     }
                 })
                 .map(new Function<CommonResponse<ResponseGroups>, ArrayList<Group>>() {
                     @Override
                     public ArrayList<Group> apply(CommonResponse<ResponseGroups> responseGroupsCommonResponse) throws Exception {
-                        return responseGroupsCommonResponse.response.items;
+                        return responseGroupsCommonResponse.response.items;// возвращаем именно arrayList
                     }
                 })
                 .onErrorResumeNext(new Function<Throwable, SingleSource<? extends ArrayList<Group>>>() {
@@ -70,10 +77,29 @@ public class GroupsViewModel extends AndroidViewModel {
                         return Single.create(new SingleOnSubscribe<ArrayList<Group>>() {
                             @Override
                             public void subscribe(SingleEmitter<ArrayList<Group>> e) throws Exception {
-                                List<Group> allGroup = App.getDatabase().getGroupDao().getAllGroup();
+                                List<Group> allGroup = App.getDatabase().getGroupDao().getAllGroup();// если нет сети - берем из БД
                                 e.onSuccess(new ArrayList<>(allGroup));
                             }
                         });
+                    }
+                })
+                .map(new Function<ArrayList<Group>, ArrayList<Group>>() {
+                    @Override
+                    public ArrayList<Group> apply(ArrayList<Group> groups) throws Exception {
+                        Collections.sort(groups, new Comparator<Group>() {
+                            @Override
+                            public int compare(Group o1, Group o2) {
+                                if (o1.getOrder() == o2.getOrder()) {
+                                    return 0;
+                                }
+                                if (o1.getOrder() < o2.getOrder()) {
+                                    return -1;
+                                } else {
+                                    return 1;
+                                }
+                            }
+                        });
+                        return groups;
                     }
                 })
                 .subscribeOn(Schedulers.io())
@@ -92,15 +118,22 @@ public class GroupsViewModel extends AndroidViewModel {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        e.printStackTrace();
                     }
                 });
     }
 
-    void onDeleteGroup(long id) {
-        GroupsApi groupsApi = RetrofitProvider.getGroupsApi();
+    void onDeleteGroup(final long id) {
+        final GroupsApi groupsApi = RetrofitProvider.getGroupsApi();
         groupsApi
                 .getLeaveGroup(accessToken, "5.80", id)
+                .map(new Function<CommonResponse<ResponseGroupLeave>, CommonResponse<ResponseGroupLeave>>() {
+                    @Override
+                    public CommonResponse<ResponseGroupLeave> apply(CommonResponse<ResponseGroupLeave> responseGroupLeaveCommonResponse) throws Exception {
+                        App.getDatabase().getGroupDao().delete(id);
+                        return responseGroupLeaveCommonResponse; //удаление из кэша при условии что запрос успешный
+                    }
+                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new SingleObserver<CommonResponse<ResponseGroupLeave>>() {
@@ -116,7 +149,7 @@ public class GroupsViewModel extends AndroidViewModel {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        e.printStackTrace();
                     }
                 });
     }

@@ -29,6 +29,7 @@
         <activity android:name=".ui.groups.GroupsActivity"/>
         <activity android:name=".ui.UserProfileActivity"/>
         <activity android:name=".ui.contacts.ContactsActivity"/>
+        <activity android:name=".ui.group_details.GroupDetailsActivity" />
     </application>
 
 </manifest>

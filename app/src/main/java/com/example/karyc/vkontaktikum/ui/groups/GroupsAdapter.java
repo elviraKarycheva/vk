@@ -14,6 +14,8 @@ import java.util.ArrayList;
 public class GroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     interface GroupsAdapterListener {
         void onButtonLeaveGroup(final long id);
+
+        void onGroupGetDetails(final long id);
     }
 
     private final ArrayList<Group> groups = new ArrayList<>();
@@ -63,16 +65,17 @@ public class GroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     public class GroupsClickHandler {
-//        public void buttonGetInfo(Group group) {
-//            if (listener != null) {
-//                listener.onGroupGetInfo(group.getId());
-//            }
-//        }
+        public void buttonGetDetails(Group group) {
+            if (listener != null) {
+                listener.onGroupGetDetails(group.getId());
+            }
+        }
 
         public void buttonLeaveGroup(Group group) {
             if (listener != null) {
                 listener.onButtonLeaveGroup(group.getId());
             }
         }
+
     }
 }

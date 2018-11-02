@@ -8,9 +8,6 @@
             name="item"
             type="com.example.karyc.vkontaktikum.core.Group" />
 
-        <variable
-            name="onItemClick"
-            type="com.example.karyc.vkontaktikum.ui.groups.GroupsAdapter.GroupsClickHandler" />
     </data>
 
     <android.support.constraint.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
@@ -53,7 +50,6 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:scaleType="centerCrop"
-            android:onClick='@{(view)->onItemClick.buttonGetDetails(item)}'
             app:imageUrl="@{item.photo200}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -67,7 +63,6 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:background="@null"
-            android:onClick='@{(view)->onItemClick.buttonLeaveGroup(item)}'
             android:text="@string/leave_group_btn"
             android:textColor="@color/btn_status"
             app:layout_constraintBottom_toBottomOf="parent"
